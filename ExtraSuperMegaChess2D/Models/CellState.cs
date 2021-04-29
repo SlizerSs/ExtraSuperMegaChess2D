@@ -9,17 +9,18 @@ namespace ExtraSuperMegaChess2D
     public enum CellState
     {
         Empty,       // пусто
-        WhiteKing,   // король
-        WhiteQueen,  // ферзь
-        WhiteRook,   // ладья
-        WhiteKnight, // конь
-        WhiteBishop, // слон
-        WhitePawn,   // пешка
-        BlackKing,
-        BlackQueen,
-        BlackRook,
-        BlackKnight,
-        BlackBishop,
-        BlackPawn
+        WhiteKing = 'K',   // король
+        WhiteQueen = 'Q',  // ферзь
+        WhiteRook = 'R',   // ладья
+        WhiteKnight = 'N', // конь
+        WhiteBishop = 'B', // слон
+        WhitePawn = 'P',   // пешка
+
+        BlackKing = 'k',
+        BlackQueen = 'q',
+        BlackRook = 'r',
+        BlackKnight = 'n',
+        BlackBishop = 'b',
+        BlackPawn = 'p'
     }
 }

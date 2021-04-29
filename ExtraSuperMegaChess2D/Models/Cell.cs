@@ -10,7 +10,13 @@ namespace ExtraSuperMegaChess2D
     {
         private CellState _state;
         private bool _active;
-
+        public int x { get; private set; }
+        public int y { get; private set; }
+        public Cell(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
         public CellState State
         {
             get => _state;

@@ -61,7 +61,6 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\CellState.cs" />
-    <Compile Include="Models\Rules.cs" />
     <Compile Include="Models\FigureObject.cs" />
     <Compile Include="ViewModels\CellColorConverter.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
