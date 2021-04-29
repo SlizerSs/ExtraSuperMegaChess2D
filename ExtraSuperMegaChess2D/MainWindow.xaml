@@ -1,0 +1,57 @@
+﻿<Window x:Class="ExtraSuperMegaChess2D.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExtraSuperMegaChess2D"
+        mc:Ignorable="d"
+        Title="ExtraSuperMegaChess2D" Height="400" Width="400" ResizeMode="NoResize" Background="#dadada">
+    <Window.Resources>
+
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50px"/>
+            <RowDefinition Height="50px"/>
+            <RowDefinition Height="50px"/>
+            <RowDefinition Height="50px"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="loginTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
+                Логин
+            </TextBlock>
+            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="passwordTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
+                Пароль
+            </TextBlock>
+            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="loginButton" Command="{Binding LoginCommand}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
+                Войти
+            </Button>
+            <Button x:Name="registrButton" Command="{Binding RegistrCommand}" Grid.Column="1" MaxWidth="75px" MaxHeight="50px">
+                Регистрация
+            </Button>
+            
+        </Grid>
+    </Grid>
+</Window>
