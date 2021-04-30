@@ -20,8 +20,8 @@ namespace ExtraSuperMegaChess2D
                   (loginCommand = new RelayCommand(obj =>
                   {
                       MessageBox.Show("Login");
-                      GameWindow gameWindow = new GameWindow();
-                      gameWindow.Show();
+                      StartWindow startWindow = new StartWindow();
+                      startWindow.Show();
                   }));
             }
         }
