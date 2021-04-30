@@ -66,7 +66,8 @@
                                         <ControlTemplate>
                                             <Border Background="{TemplateBinding Background}" >
                                                 <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-                                                    <controls:ChessPiece Piece="{Binding State}" />
+                                                    <controls:ChessPiece Piece="{Binding State}" >
+                                                    </controls:ChessPiece>
                                                 </Border>
                                             </Border>
                                         </ControlTemplate>
@@ -77,7 +78,13 @@
                                         <Setter Property="Background" Value="SandyBrown"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Active}" Value="True">
-                                        <Setter Property="BorderBrush" Value="Red"/>
+                                        <Setter Property="Background" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CanMove}" Value="True">
+                                        <Setter Property="BorderBrush" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding WhereMove}" Value="True">
+                                        <Setter Property="Background" Value="LightGreen"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -87,7 +94,8 @@
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="8" Rows="8"/>
+                    <UniformGrid Columns="8" Rows="8">
+                    </UniformGrid>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

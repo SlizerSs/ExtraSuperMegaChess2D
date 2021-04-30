@@ -10,9 +10,11 @@ namespace ExtraSuperMegaChess2D
     {
         private CellState _state;
         private bool _active;
+        private bool _canMove;
+        private bool _whereMove;
         public int x { get; private set; }
         public int y { get; private set; }
-        public Cell(int x, int y)
+        public Cell(int y, int x)
         {
             this.x = x;
             this.y = y;
@@ -32,6 +34,24 @@ namespace ExtraSuperMegaChess2D
             set
             {
                 _active = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool CanMove // это будет показывать, что ячейка выделена пользователем
+        {
+            get => _canMove;
+            set
+            {
+                _canMove = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool WhereMove // это будет показывать, что ячейка выделена пользователем
+        {
+            get => _whereMove;
+            set
+            {
+                _whereMove = value;
                 OnPropertyChanged();
             }
         }
