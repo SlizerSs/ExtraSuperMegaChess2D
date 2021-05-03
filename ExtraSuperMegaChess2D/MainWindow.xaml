@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExtraSuperMegaChess2D"
         mc:Ignorable="d"
-        Title="ExtraSuperMegaChess2D" Height="400" Width="400" ResizeMode="NoResize" Background="#dadada">
+        Title="ExtraSuperMegaChess2D" Height="400" Width="400" ResizeMode="NoResize" Background="#dadada"
+        d:DataContext="{d:DesignInstance local:LoginViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
-
+        
     </Window.Resources>
     
     <Grid>
@@ -28,7 +29,12 @@
             <TextBlock x:Name="loginTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
                 Логин
             </TextBlock>
-            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px"/>
+            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px">
+                <TextBox.Text>
+                    <Binding Path="Name">
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </Grid>
         <Grid Grid.Column="0" Grid.Row="2">
             <Grid.RowDefinitions>
@@ -38,17 +44,19 @@
             <TextBlock x:Name="passwordTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
                 Пароль
             </TextBlock>
-            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px"/>
+            <PasswordBox x:Name="txtPassword" PasswordChar="*" Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px">
+                
+            </PasswordBox>
         </Grid>
         <Grid Grid.Column="0" Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="loginButton" Command="{Binding LoginCommand}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
+            <Button x:Name="loginButton" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
                 Войти
             </Button>
-            <Button x:Name="registrButton" Command="{Binding RegistrCommand}" Grid.Column="1" MaxWidth="75px" MaxHeight="50px">
+            <Button x:Name="registrButton" Command="{Binding RegistrCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="1" MaxWidth="75px" MaxHeight="50px">
                 Регистрация
             </Button>
             

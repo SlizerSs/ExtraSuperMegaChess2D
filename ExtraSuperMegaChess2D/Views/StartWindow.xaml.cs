@@ -19,10 +19,10 @@ namespace ExtraSuperMegaChess2D
     /// </summary>
     public partial class StartWindow : Window
     {
-        public StartWindow()
+        public StartWindow(int player_id)
         {
             InitializeComponent();
-            DataContext = new GameViewModel();
+            DataContext = new StartViewModel(player_id);
         }
     }
 }

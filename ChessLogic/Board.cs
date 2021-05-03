@@ -29,9 +29,7 @@ namespace ChessLogic
             moveColor = (parts[1] == "b") ? Color.black : Color.white;
             moveNumber = int.Parse(parts[5]);
 
-            //SetFigureAt(new Square("a1"), Figure.whiteKing);
-            //SetFigureAt(new Square("a8"), Figure.blackKing);
-            moveColor = Color.white;
+            //moveColor = Color.white;
         }
         void InitFigures(string data)
         {

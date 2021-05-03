@@ -22,9 +22,11 @@ namespace ExtraSuperMegaChess2D
     {
         public MainWindow()
         {
+            LoginViewModel vm = new LoginViewModel();
             InitializeComponent();
-            DataContext = new LoginViewModel();
-
+            DataContext = vm;
+            if (vm.CloseAction == null)
+                vm.CloseAction = new Action(this.Close);
         }
     }
 }

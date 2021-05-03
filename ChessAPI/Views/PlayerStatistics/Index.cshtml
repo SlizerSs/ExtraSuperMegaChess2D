@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ChessAPI.Models.PlayerStatistic>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Player.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Games)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Wins)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Loses)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Draws)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Resigns)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Player.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Games)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Wins)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Loses)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Draws)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Resigns)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PlayerID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PlayerID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ChessAPI.Models.Side>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Game.FEN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Player.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Color)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game.FEN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Player.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Color)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SideID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SideID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SideID })
+        </td>
+    </tr>
+}
+
+</table>

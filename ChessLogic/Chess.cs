@@ -81,13 +81,15 @@ namespace ChessLogic
         }
         public bool IsMate()
         {
-            if(IsCheck())
+            FindAllMoves();
+            if (IsCheck())
                 if(allMoves.Count()==0)
                     return true;
             return false;
         }
         public bool IsStalemate()
         {
+            FindAllMoves();
             if (allMoves.Count() == 0)
                 if (!IsCheck())
                     return true;
