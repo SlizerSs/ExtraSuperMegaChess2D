@@ -33,9 +33,9 @@
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="UserName" Grid.Row="0" Grid.Column="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
+        <Label Content="{Binding Path=Player.Name}" ContentStringFormat="Player: {0}" Grid.Row="0" Grid.Column="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
 
-        <Image Grid.Row="0" Grid.Column="1" MaxHeight="50px" HorizontalAlignment="Right" Style="{StaticResource VerticalCenterRight}"/>
+        <Image Source="C:\z\Visual Studio Projects\kursach\ExtraSuperMegaChess2D\ExtraSuperMegaChess2D\Images\Flag_of_the_United_Kingdom.png" Grid.Row="0" Grid.Column="1" MaxHeight="50px" HorizontalAlignment="Right" Style="{StaticResource VerticalCenterRight}"/>
 
         <Grid Grid.Row="1" Grid.Column="0" Margin="0,50,0,50">
             <Grid.ColumnDefinitions>
@@ -52,21 +52,17 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Label Content="Statistics:" Grid.Row="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
-            
-            <Label Content="Games: " Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
- 
-            <Label Content="White games: " Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
- 
-            <Label Content="Black games: " Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="Statistics: " Grid.Row="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="Wins: " Grid.Row="4" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.PlayerStatistic.Games}" ContentStringFormat="Games: {0}" Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="Loses: " Grid.Row="5" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label  Content="{Binding Path=Player.PlayerStatistic.Wins}" ContentStringFormat="Wins: {0}" Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="Draws: " Grid.Row="6" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.PlayerStatistic.Loses}" ContentStringFormat="Loses: {0}" Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="Resigns: " Grid.Row="7" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.PlayerStatistic.Draws}" ContentStringFormat="Draws: {0}" Grid.Row="4" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+
+            <Label Content="{Binding Path=Player.PlayerStatistic.Resigns}" ContentStringFormat="Resigns: {0}" Grid.Row="5" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
         </Grid>
 
@@ -79,7 +75,7 @@
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
 
-            <Button Content="Start new game" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Left"  Style="{StaticResource VerticalCenterLeft}" />
+            <Button Command="{Binding StartNewGameCommand}" CommandParameter="{Binding Path=Player}" Content="Start new game" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Left"  Style="{StaticResource VerticalCenterLeft}" />
 
             <Grid Grid.Row="1" Margin="0,0,0,0">
                 <Grid.ColumnDefinitions>
@@ -92,18 +88,18 @@
 
                 <Label Content="Active Games" Grid.Row="0" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-                <Grid Grid.Row="1" Margin="0,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
-                    <!-- Запущенные игры (мб контролы свои будут я пока хз) (ещё нужно понять как добавлять новые rowdefinitions и сами новые элементы) -->
+                <ListBox Grid.Row="1" x:Name="gamesList" ItemsSource="{Binding Path=Games, UpdateSourceTrigger=PropertyChanged}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="2">
 
-                </Grid>
+                                <Label Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}" />
+                                
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                
             </Grid>
         </Grid>
     </Grid>

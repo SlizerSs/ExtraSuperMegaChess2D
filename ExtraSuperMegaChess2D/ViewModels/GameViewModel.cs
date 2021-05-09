@@ -33,10 +33,6 @@ namespace ExtraSuperMegaChess2D
             }
         }
 
-        //public ICommand NewGameCommand => _newGameCommand ??= new RelayCommand(parameter =>
-        //{
-        //    SetupBoard();
-        //});
         public ICommand NewGameCommand
         {
             get
@@ -52,10 +48,6 @@ namespace ExtraSuperMegaChess2D
 
         }
 
-        //public ICommand ClearCommand => _clearCommand ??= new RelayCommand(parameter =>
-        //{
-        //    Board = new Board();
-        //});
         public ICommand ClearCommand
         {
             get
@@ -67,23 +59,7 @@ namespace ExtraSuperMegaChess2D
                 }));
             }
         }
-        //public ICommand CellCommand => _cellCommand ??= new RelayCommand(parameter =>
-        //{
-        //    Cell cell = (Cell)parameter;
-        //    Cell activeCell = Board.FirstOrDefault(x => x.Active);
-        //    if (cell.State != CellState.Empty)
-        //    {
-        //        if (!cell.Active && activeCell != null)
-        //            activeCell.Active = false;
-        //        cell.Active = !cell.Active;
-        //    }
-        //    else if (activeCell != null)
-        //    {
-        //        activeCell.Active = false;
-        //        cell.State = activeCell.State;
-        //        activeCell.State = CellState.Empty;
-        //    }
-        //}, parameter => parameter is Cell cell && (Board.Any(x => x.Active) || cell.State != CellState.Empty));
+
         public ICommand CellCommand
         {
             get
@@ -92,7 +68,6 @@ namespace ExtraSuperMegaChess2D
                 (_cellCommand = new RelayCommand(parameter =>
                 {
                     //реализовать ход
-
 
                     Cell cell = (Cell)parameter;
                     Cell activeCell = Board.FirstOrDefault(x => x.Active);
@@ -124,7 +99,7 @@ namespace ExtraSuperMegaChess2D
                         move = null;
                         activeCell.Active = false;
                         activeCell = null;
-                        //SetupBoard();
+                        
                     }
                 }, parameter => parameter is Cell cell && (Board.Any(x => x.Active) || cell.State != CellState.Empty)));
             }

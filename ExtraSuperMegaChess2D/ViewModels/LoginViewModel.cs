@@ -40,7 +40,7 @@ namespace ExtraSuperMegaChess2D
                           }
                           if (HashGenerator.VerifyHashedPassword(player.Password, Password))
                           {
-                              StartWindow startWindow = new StartWindow(player.PlayerID);
+                              StartWindow startWindow = new StartWindow(player);
                               startWindow.Show();
                               CloseAction();
                           }

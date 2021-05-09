@@ -40,14 +40,14 @@ namespace ChessAPI.Controllers
         }
 
         // GET: Players/Create
-        public string Create(string name, string password)
+        public Player Create(string name, string password)
         {
             Logic logic = new Logic();
             Player player = logic.MakeNewPlayer(name, password);
-            
+            PlayerStatistic ps = logic.MakeNewPS(player.PlayerID);
 
             ViewBag.PlayerID = new SelectList(db.PlayerStatistics, "PlayerID", "PlayerID");
-            return new JavaScriptSerializer().Serialize(player);
+            return player;
         }
 
         // POST: Players/Create

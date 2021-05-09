@@ -16,13 +16,9 @@ namespace ChessAPI.Controllers
         private ModelChessDB db = new ModelChessDB();
 
         // GET: Games
-        public List<string> Index()
+        public List<Game> Index()
         {
-            List<string> result = new List<string>();
-            List<Game> list = db.Games.ToList();
-            foreach (Game g in list)
-                result.Add(new JavaScriptSerializer().Serialize(g));
-            return result;
+            return db.Games.ToList();
         }
 
         // GET: Games/Details/5
@@ -42,11 +38,14 @@ namespace ChessAPI.Controllers
             return new JavaScriptSerializer().Serialize(game);
         }
         // GET: Games/Create
-        public string Create()
+        public Game Create(Player sender)
         {
             Logic logic = new Logic();
-            Game game = logic.MakeNewGame();
-            return new JavaScriptSerializer().Serialize(game);
+            Game game = logic.MakeNewGame(sender);
+            Side side = logic.MakeNewSide(game.GameID, sender.PlayerID, "w");
+
+            ViewBag.GameID = new SelectList(db.Sides, "GameID", "GameID");
+            return game;
         }
 
         // POST: Games/Create

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,11 @@ namespace ExtraSuperMegaChess2D
     /// </summary>
     public partial class StartWindow : Window
     {
-        public StartWindow(int player_id)
+        public StartWindow(Player player)
         {
             InitializeComponent();
-            DataContext = new StartViewModel(player_id);
+            DataContext = new StartViewModel(player);
         }
+
     }
 }

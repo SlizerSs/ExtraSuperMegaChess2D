@@ -13,7 +13,7 @@ namespace ChessAPI.Models
         {
             db = new ModelChessDB();
         }
-        public Game MakeNewGame()
+        public Game MakeNewGame(Player sender)
         {
             Chess chess = new Chess();
             Game game = new Game();
