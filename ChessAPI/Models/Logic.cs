@@ -13,12 +13,15 @@ namespace ChessAPI.Models
         {
             db = new ModelChessDB();
         }
-        public Game MakeNewGame(Player sender)
+        public Game MakeNewGame()
         {
             Chess chess = new Chess();
             Game game = new Game();
             game.FEN = chess.fen;
             game.Status = "wait";
+            game.Winner = "";
+            game.LastMove = "";
+
 
             db.Games.Add(game);
             db.SaveChanges();
@@ -70,6 +73,7 @@ namespace ChessAPI.Models
             side.GameID = GameID;
             side.PlayerID = PlayerID;
             side.Color = color;
+            side.OffersDraw = false;
 
             db.Sides.Add(side);
             db.SaveChanges();
@@ -91,5 +95,91 @@ namespace ChessAPI.Models
 
             return ps;
         }
+        public string GameDetails(Game game, int playerID)
+        {
+            if (game == null)
+                return null;
+            string whitePlayer = "";
+            string blackPlayer = "";
+            string yourColor = "";
+            string offerDraw = "";
+
+            foreach (Side s in game.Sides)
+            {
+                if (s.Color == "w")
+                    whitePlayer = Convert.ToString(s.PlayerID);
+                else if (s.Color == "b")
+                    blackPlayer = Convert.ToString(s.PlayerID);
+
+                if (s.PlayerID == playerID)
+                {
+                    yourColor = s.Color;
+                }
+
+                if (s.OffersDraw)
+                {
+                    offerDraw = Convert.ToString(s.PlayerID);
+                }
+            }
+
+
+            return "{"
+                + $"\"GameID\":{game.GameID},"
+                + $"\"FEN\":\"{game.FEN}\","
+                + $"\"Status\":\"{game.Status}\","
+                + $"\"White\":{whitePlayer},"
+                + $"\"Black\":{blackPlayer},"
+                + $"\"LastMove\":{game.LastMove},"
+                + $"\"YourColor\":\"{yourColor}\","
+                + $"\"OfferDraw\":{offerDraw},"
+                + $"\"Winner\":\"{game.Winner}\""
+                + "}"
+                ;
+        }
+        public string LiteGameDetails(Game game)
+        {
+            if (game == null)
+                return null;
+            string whitePlayer = "";
+            string blackPlayer = "";
+
+            foreach (Side s in game.Sides)
+            {
+                if (s.Color == "w")
+                    whitePlayer = Convert.ToString(s.PlayerID);
+                else if (s.Color == "b")
+                    blackPlayer = Convert.ToString(s.PlayerID);
+            }
+
+
+            return "{"
+                + $"\"GameID\":{game.GameID},"
+                + $"\"FEN\":\"{game.FEN}\","
+                + $"\"Status\":\"{game.Status}\","
+                + $"\"White\":{whitePlayer},"
+                + $"\"Black\":{blackPlayer},"
+                + $"\"LastMove\":{game.LastMove},"
+                + $"\"Winner\":\"{game.Winner}\""
+                + "}"
+                ;
+        }
+        public string PlayerDetails(Player player)
+        {
+            if (player == null)
+                return null;
+
+            return "{"
+                + $"\"PlayerID\":{player.PlayerID},"
+                + $"\"Name\":\"{player.Name}\","
+                + $"\"Password\":\"{player.Password}\","
+                + $"\"Games\":{player.PlayerStatistic.Games},"
+                + $"\"Wins\":{player.PlayerStatistic.Wins},"
+                + $"\"Loses\":{player.PlayerStatistic.Loses},"
+                + $"\"Draws\":{player.PlayerStatistic.Draws},"
+                + $"\"Resigns\":{player.PlayerStatistic.Resigns}"
+                + "}"
+                ;
+        }
+
     }
 }

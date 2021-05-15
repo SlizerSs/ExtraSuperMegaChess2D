@@ -1,50 +1,58 @@
-﻿using ChessAPI.Controllers;
-using ChessAPI.Models;
+﻿using ChessClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExtraSuperMegaChess2D
 {
     public class StartViewModel : NotifyPropertyChanged
     {
+        //исправить трабл с добавлением новой игры
         //синхронизация всех клиентов с сервером
         //сдача, предложение ничьи в игре, завершение игры и т.д.
-        //связь с сервером
+
         private RelayCommand startNewGameCommand;
 
-        private GamesController gc;
-
-        private List<Game> _games;
-        public List<Game> Games
+        private List<GameInfo> _games;
+        public List<GameInfo> Games
         {
             get => _games;
             set { _games = value; OnPropertyChanged(); }
         }
-        public Player Player { get; set; }
-        
-        public StartViewModel(Player player)
+        public PlayerInfo Player { get; set; }
+        Timer timer;
+        public Action CloseAction { get; set; }
+        public StartViewModel(PlayerInfo player)
         {
             Player = player;
-            gc = new GamesController();
-            Games = new List<Game>();
-            Games = gc.Index();
+            Client client = new Client("http://localhost:56213/Games");
+            Games = new List<GameInfo>();
             
 
+            Client client1 = new Client("http://localhost:56213/Games");
+
+            TimerCallback tm = async x =>
+            {
+                Games = await client1.GetAllGames();
+            };
+            timer = new Timer(tm, null, 0, 1000);
         }
         public RelayCommand StartNewGameCommand
         {
             get
             {
                 return startNewGameCommand ??
-                  (startNewGameCommand = new RelayCommand(obj =>
+                  (startNewGameCommand = new RelayCommand(async obj =>
                   {
-                      var player = obj as Player;
-                      gc.Create(player);
-                      Games = gc.Index();
+                      Client client = new Client("http://localhost:56213/Games/Create", Player.PlayerID);
+                      await client.GetCurrentGame();
+                      GameWindow gw = new GameWindow(Player);
+                      gw.Show();
+                      CloseAction();
 
                   }));
             }

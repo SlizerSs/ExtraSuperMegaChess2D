@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessAPI", "ChessAPI\ChessA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClient", "ClassClient\ChessClient.csproj", "{AE90A0CD-BF3B-4C04-96B6-7153CB88F800}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientServerApi", "ClientServerApi\ClientServerApi.csproj", "{E622A041-30C5-4F42-8184-371386FB6848}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AE90A0CD-BF3B-4C04-96B6-7153CB88F800}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE90A0CD-BF3B-4C04-96B6-7153CB88F800}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE90A0CD-BF3B-4C04-96B6-7153CB88F800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E622A041-30C5-4F42-8184-371386FB6848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E622A041-30C5-4F42-8184-371386FB6848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E622A041-30C5-4F42-8184-371386FB6848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E622A041-30C5-4F42-8184-371386FB6848}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

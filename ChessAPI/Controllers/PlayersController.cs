@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ChessAPI.Models;
+using ClientServerApi;
+using Newtonsoft.Json;
 
 namespace ChessAPI.Controllers
 {
@@ -16,56 +19,74 @@ namespace ChessAPI.Controllers
         private ModelChessDB db = new ModelChessDB();
 
         // GET: Players
-        public List<Player> Index()
+        public string Index()
         {
+            string result = "";
+            Logic logic = new Logic();
+
             var players = db.Players.Include(p => p.PlayerStatistic);
 
             List<Player> list = players.ToList();
-            return list;
+            foreach (Player pl in list)
+            {
+                result += logic.PlayerDetails(pl);
+            }
+            return result;
         }
 
         // GET: Players/Details/5
-        public Player Details(int? id)
-        {
-
-            Player player = db.Players.Find(id);
-            return player;
-        }
-        // GET: Players/Details/name
-        public Player Details(string name)
-        {
-
-            Player player = db.Players.Find(name);
-            return player;
-        }
-
-        // GET: Players/Create
-        public Player Create(string name, string password)
+        public string Details(int? id)
         {
             Logic logic = new Logic();
-            Player player = logic.MakeNewPlayer(name, password);
+            Player player = db.Players.Find(id);
+            return logic.PlayerDetails(player);
+        }
+        // GET: Players/Details/name
+        public string Details(string name)
+        {
+            Logic logic = new Logic();
+            Player player = db.Players.Find(name);
+            return logic.PlayerDetails(player);
+        }
+
+        [HttpPost]
+        // POST: Players/Create
+        public string Create()
+        {
+            UserLoginData loginData;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                loginData = JsonConvert.DeserializeObject<UserLoginData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Logic logic = new Logic();
+            Player player = logic.MakeNewPlayer(loginData.Login, loginData.HashedPassword);
             PlayerStatistic ps = logic.MakeNewPS(player.PlayerID);
 
             ViewBag.PlayerID = new SelectList(db.PlayerStatistics, "PlayerID", "PlayerID");
-            return player;
+
+            return logic.PlayerDetails(player);
         }
 
         // POST: Players/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в разделе https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public string Create([Bind(Include = "PlayerID,Name,Password")] Player player)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Players.Add(player);
-                db.SaveChanges();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public string Create([Bind(Include = "PlayerID,Name,Password")] Player player)
+        //{
+        //    Logic logic = new Logic();
 
-            ViewBag.PlayerID = new SelectList(db.PlayerStatistics, "PlayerID", "PlayerID", player.PlayerID);
-            return new JavaScriptSerializer().Serialize(player);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Players.Add(player);
+        //        db.SaveChanges();
+        //    }
+
+        //    ViewBag.PlayerID = new SelectList(db.PlayerStatistics, "PlayerID", "PlayerID", player.PlayerID);
+        //    return logic.PlayerDetails(player);
+        //}
 
         // GET: Players/Delete/5
         public string Delete(int? id)

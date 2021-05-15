@@ -13,7 +13,7 @@ namespace ChessAPI
     public class Global : HttpApplication
     {
         void Application_Start(object sender, EventArgs e)
-        {
+        {  
             // Код, выполняемый при запуске приложения
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);

@@ -15,7 +15,8 @@
     <AssemblyName>ChessAPI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort>44343</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -124,6 +125,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105091940542_MakeDBMigration.cs" />
+    <Compile Include="Migrations\202105091940542_MakeDBMigration.Designer.cs">
+      <DependentUpon>202105091940542_MakeDBMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105092101232_AddLastMoveMigration.cs" />
+    <Compile Include="Migrations\202105092101232_AddLastMoveMigration.Designer.cs">
+      <DependentUpon>202105092101232_AddLastMoveMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Logic.cs" />
     <Compile Include="Models\ModelChessDB.cs" />
@@ -174,6 +184,18 @@
       <Project>{e33fcfb8-43fb-44b9-8087-21ffa06f3b0e}</Project>
       <Name>ChessLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ClientServerApi\ClientServerApi.csproj">
+      <Project>{e622a041-30c5-4f42-8184-371386fb6848}</Project>
+      <Name>ClientServerApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202105091940542_MakeDBMigration.resx">
+      <DependentUpon>202105091940542_MakeDBMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105092101232_AddLastMoveMigration.resx">
+      <DependentUpon>202105092101232_AddLastMoveMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

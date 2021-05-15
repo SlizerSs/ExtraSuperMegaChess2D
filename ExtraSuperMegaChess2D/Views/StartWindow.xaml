@@ -54,15 +54,15 @@
 
             <Label Content="Statistics: " Grid.Row="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="{Binding Path=Player.PlayerStatistic.Games}" ContentStringFormat="Games: {0}" Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.Games}" ContentStringFormat="Games: {0}" Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label  Content="{Binding Path=Player.PlayerStatistic.Wins}" ContentStringFormat="Wins: {0}" Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label  Content="{Binding Path=Player.Wins}" ContentStringFormat="Wins: {0}" Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="{Binding Path=Player.PlayerStatistic.Loses}" ContentStringFormat="Loses: {0}" Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.Loses}" ContentStringFormat="Loses: {0}" Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="{Binding Path=Player.PlayerStatistic.Draws}" ContentStringFormat="Draws: {0}" Grid.Row="4" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.Draws}" ContentStringFormat="Draws: {0}" Grid.Row="4" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Label Content="{Binding Path=Player.PlayerStatistic.Resigns}" ContentStringFormat="Resigns: {0}" Grid.Row="5" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.Resigns}" ContentStringFormat="Resigns: {0}" Grid.Row="5" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
         </Grid>
 

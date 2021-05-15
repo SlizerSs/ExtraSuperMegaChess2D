@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ChessClient;
 using ChessLogic;
 namespace ExtraSuperMegaChess2D
 {
@@ -22,6 +23,12 @@ namespace ExtraSuperMegaChess2D
 
         public IEnumerable<char> Numbers => "87654321";
         public IEnumerable<char> Letters => "ABCDEFGH";
+
+        PlayerInfo Player { get; set; }
+        public GameViewModel(PlayerInfo player)
+        {
+            Player = player;
+        }
 
         public Board Board
         {
@@ -67,7 +74,6 @@ namespace ExtraSuperMegaChess2D
                 return _cellCommand ??
                 (_cellCommand = new RelayCommand(parameter =>
                 {
-                    //реализовать ход
 
                     Cell cell = (Cell)parameter;
                     Cell activeCell = Board.FirstOrDefault(x => x.Active);
@@ -180,8 +186,6 @@ namespace ExtraSuperMegaChess2D
         {
             board[y, x] = (CellState)Convert.ToChar(figure);
         }
-        public GameViewModel()
-        {
-        }
+
     }
 }

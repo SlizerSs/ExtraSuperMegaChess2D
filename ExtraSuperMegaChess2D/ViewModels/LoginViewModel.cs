@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using ChessAPI.Controllers;
 using ChessAPI.Models;
-
+using ChessClient;
 namespace ExtraSuperMegaChess2D
 {
     class LoginViewModel
@@ -24,16 +24,18 @@ namespace ExtraSuperMegaChess2D
             get
             {
                 return loginCommand ??
-                  (loginCommand = new RelayCommand(obj =>
+                  (loginCommand = new RelayCommand(async obj =>
                   {
                       var passwordBox = obj as PasswordBox;
                       Password = passwordBox.Password;
                       if (Name != null && Password != null)
                       {
-                          PlayersController pc = new PlayersController();
-                          List<Player> pl = pc.Index();
-                          Player player = new Player();
-                          foreach (Player p in pl)
+                          Client client = new Client("http://localhost:56213/Players");
+
+                          List<PlayerInfo> players = await client.GetAllPlayers();
+
+                          PlayerInfo player = new PlayerInfo();
+                          foreach (PlayerInfo p in players)
                           {
                               if (p.Name == Name)
                                   player = p;
@@ -48,7 +50,7 @@ namespace ExtraSuperMegaChess2D
                           {
                               MessageBox.Show("Введён неверный пароль");
                           }
-                          
+
                       }
                       else
                       {
@@ -63,23 +65,25 @@ namespace ExtraSuperMegaChess2D
             get
             {
                 return registrCommand ??
-                  (registrCommand = new RelayCommand(obj =>
+                  (registrCommand = new RelayCommand(async obj =>
                   {
                       var passwordBox = obj as PasswordBox;
                       Password = passwordBox.Password;
                       if (Name != null && Password != null)
                       {
-                          PlayersController pc = new PlayersController();
-                          foreach (Player pl in pc.Index())
+                          Client client = new Client("http://localhost:56213/Players");
+
+                          List<PlayerInfo> players = await client.GetAllPlayers();
+                          foreach (PlayerInfo pl in players)
                           {
-                              if(pl.Name == Name)
+                              if (pl.Name == Name)
                               {
                                   MessageBox.Show("Пользователь с таким именем уже существует");
                                   return;
                               }
                           }
-                          
-                          pc.Create(Name, HashGenerator.HashPassword(Password));
+                          client = new Client("http://localhost:56213/Players/Create/");
+                          await client.MakeNewPlayer(Name, HashGenerator.HashPassword(Password));
                           MessageBox.Show("Регистрация прошла успешно");
                       }
                       else
