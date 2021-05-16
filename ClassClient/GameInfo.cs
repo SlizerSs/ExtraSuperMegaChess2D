@@ -21,6 +21,7 @@ namespace ChessClient
 
         public GameInfo(NameValueCollection list)
         {
+            
             GameID = int.Parse(list["GameID"]);
             FEN = list["FEN"];
             Status = list["Status"];

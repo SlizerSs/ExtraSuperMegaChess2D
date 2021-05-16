@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ChessAPI.Models;
+using ClientServerApi;
+using Newtonsoft.Json;
 
 namespace ChessAPI.Controllers
 {
@@ -31,10 +34,18 @@ namespace ChessAPI.Controllers
         }
 
         // GET: Sides/Create
-        public string Create(int GameID, int PlayerID, string color)
+        [HttpPost]
+        public string Create()
         {
+            MakeNewSideData sideData;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                sideData = JsonConvert.DeserializeObject<MakeNewSideData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
             Logic logic = new Logic();
-            Side side = logic.MakeNewSide(GameID, PlayerID, color);
+            Side side = logic.MakeNewSide(sideData.ID, sideData.UserID, sideData.Color);
 
             ViewBag.GameID = new SelectList(db.Games, "GameID", "FEN");
             ViewBag.PlayerID = new SelectList(db.Players, "PlayerID", "Name");
@@ -45,21 +56,21 @@ namespace ChessAPI.Controllers
         // POST: Sides/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в разделе https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public string Create([Bind(Include = "SideID,GameID,PlayerID,Color")] Side side)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Sides.Add(side);
-                db.SaveChanges();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public string Create([Bind(Include = "SideID,GameID,PlayerID,Color")] Side side)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Sides.Add(side);
+        //        db.SaveChanges();
+        //    }
 
-            ViewBag.GameID = new SelectList(db.Games, "GameID", "FEN", side.GameID);
-            ViewBag.PlayerID = new SelectList(db.Players, "PlayerID", "Name", side.PlayerID);
-            return new JavaScriptSerializer().Serialize(side);
+        //    ViewBag.GameID = new SelectList(db.Games, "GameID", "FEN", side.GameID);
+        //    ViewBag.PlayerID = new SelectList(db.Players, "PlayerID", "Name", side.PlayerID);
+        //    return new JavaScriptSerializer().Serialize(side);
 
-        }
+        //}
 
         //// GET: Sides/Edit/5
         //public ActionResult Edit(int? id)

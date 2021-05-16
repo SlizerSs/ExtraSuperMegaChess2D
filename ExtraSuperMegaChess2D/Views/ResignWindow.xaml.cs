@@ -10,20 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ExtraSuperMegaChess2D
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для ResignWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ResignWindow : Window
     {
-        public MainWindow()
+        public ResignWindow()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel();
+            DataContext = new ResignViewModel();
         }
     }
 }

@@ -53,8 +53,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="loginButton" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
-                Войти
+            <Button Content="Log in" x:Name="loginButton" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
+
             </Button>
             <Button x:Name="registrButton" Command="{Binding RegistrCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="1" MaxWidth="75px" MaxHeight="50px">
                 Регистрация

@@ -18,7 +18,6 @@ namespace ExtraSuperMegaChess2D
         private RelayCommand registrCommand;
         public string Name { get; set; }
         public string Password { get; set; }
-        public Action CloseAction { get; set; }
         public RelayCommand LoginCommand
         {
             get
@@ -26,7 +25,9 @@ namespace ExtraSuperMegaChess2D
                 return loginCommand ??
                   (loginCommand = new RelayCommand(async obj =>
                   {
+
                       var passwordBox = obj as PasswordBox;
+                      
                       Password = passwordBox.Password;
                       if (Name != null && Password != null)
                       {
@@ -44,7 +45,7 @@ namespace ExtraSuperMegaChess2D
                           {
                               StartWindow startWindow = new StartWindow(player);
                               startWindow.Show();
-                              CloseAction();
+                              CloseWindow(Window.GetWindow(passwordBox));
                           }
                           else
                           {
@@ -93,6 +94,13 @@ namespace ExtraSuperMegaChess2D
 
                   }));
             }
+        }
+        private void CloseWindow(Window win)
+        {
+            if (win == null)
+                return;
+
+            win.Close();
         }
 
     }

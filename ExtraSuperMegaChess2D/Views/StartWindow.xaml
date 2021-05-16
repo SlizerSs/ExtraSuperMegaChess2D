@@ -22,6 +22,7 @@
             <Setter Property="Control.VerticalAlignment" Value="Center" />
             <Setter Property="Control.Margin" Value="20,0,20,0" />
         </Style>
+        <local:ConnectToGameConverter x:Key="ConnectToGameConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -75,7 +76,7 @@
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
 
-            <Button Command="{Binding StartNewGameCommand}" CommandParameter="{Binding Path=Player}" Content="Start new game" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Left"  Style="{StaticResource VerticalCenterLeft}" />
+            <Button x:Name="StartGameButton" Command="{Binding Path=StartNewGameCommand}" CommandParameter="{Binding ElementName=StartGameButton}" Content="Start new game" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Left"  Style="{StaticResource VerticalCenterLeft}" />
 
             <Grid Grid.Row="1" Margin="0,0,0,0">
                 <Grid.ColumnDefinitions>
@@ -89,12 +90,30 @@
                 <Label Content="Active Games" Grid.Row="0" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
                 <ListBox Grid.Row="1" x:Name="gamesList" ItemsSource="{Binding Path=Games, UpdateSourceTrigger=PropertyChanged}">
-                    <ListBox.ItemTemplate>
+                    <ListBox.ItemTemplate >
                         <DataTemplate>
-                            <Border BorderThickness="2">
-
-                                <Label Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}" />
-                                
+                            <Border BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}"/>
+                                    <Label Grid.Column="1" Content="{Binding Path=White, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="w: {0}"/>
+                                    <Label Grid.Column="2" Content="{Binding Path=Black, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="b: {0}"/>
+                                    <Label Grid.Column="3" Content="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Status: {0}"/>
+                                    <Button Grid.Column="4" Command="{Binding Path=DataContext.ConnectToGameCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Content="Играть" >
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource ConnectToGameConverter}">
+                                                <Binding Path="GameID"/>
+                                                <Binding ElementName="gamesList"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                    </Button>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

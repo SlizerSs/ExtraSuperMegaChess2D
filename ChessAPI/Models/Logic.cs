@@ -48,11 +48,76 @@ namespace ChessAPI.Models
                 return game;
 
             game.FEN = chessNext.fen;
+            game.LastMove = move;
 
             if (chessNext.IsMate() || chessNext.IsStalemate())
                 game.Status = "done";
 
             db.Entry(game).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return game;
+        }
+        public Game ChangeStatus(int id, string status)
+        {
+            Game game = GetGame(id);
+            if (game == null)
+                return game;
+
+            if (game.Status == "done")
+                return game;
+
+            if (game.Status == status)
+                return game;
+
+            game.Status = status;
+
+            db.Entry(game).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return game;
+        }
+        public Game EndGame(int id, int UserID, bool IsWinner)
+        {
+            Game game = GetGame(id);
+            if (game == null)
+                return game;
+            Player playerWinner = new Player();
+            Player playerLoser = new Player();
+            game.Status = "done";
+            if (IsWinner)
+            {
+                foreach (Side s in game.Sides)
+                {
+                    if (s.PlayerID == UserID)
+                    {
+                        playerWinner = db.Players.Find(s.PlayerID);
+                        game.Winner = playerWinner.Name;
+                    }
+                    else
+                        playerLoser = db.Players.Find(s.PlayerID);
+                }
+            }
+            else
+            {
+                foreach (Side s in game.Sides)
+                {
+                    if (s.PlayerID != UserID)
+                    {
+                        playerWinner = db.Players.Find(s.PlayerID);
+                        game.Winner = playerWinner.Name;
+                    }
+                    else
+                        playerLoser = db.Players.Find(s.PlayerID);
+                }
+            }
+            playerWinner.PlayerStatistic.Games += 1;
+            playerWinner.PlayerStatistic.Wins += 1;
+
+            playerLoser.PlayerStatistic.Games += 1;
+            playerLoser.PlayerStatistic.Loses += 1;
+
+            db.Entry(game).State = System.Data.Entity.EntityState.Modified;
+            db.Entry(playerWinner).State = System.Data.Entity.EntityState.Modified;
+            db.Entry(playerLoser).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             return game;
         }
@@ -107,9 +172,9 @@ namespace ChessAPI.Models
             foreach (Side s in game.Sides)
             {
                 if (s.Color == "w")
-                    whitePlayer = Convert.ToString(s.PlayerID);
+                    whitePlayer = db.Players.Find(s.PlayerID).Name;
                 else if (s.Color == "b")
-                    blackPlayer = Convert.ToString(s.PlayerID);
+                    blackPlayer = db.Players.Find(s.PlayerID).Name;
 
                 if (s.PlayerID == playerID)
                 {
@@ -127,8 +192,8 @@ namespace ChessAPI.Models
                 + $"\"GameID\":{game.GameID},"
                 + $"\"FEN\":\"{game.FEN}\","
                 + $"\"Status\":\"{game.Status}\","
-                + $"\"White\":{whitePlayer},"
-                + $"\"Black\":{blackPlayer},"
+                + $"\"White\":\"{whitePlayer}\","
+                + $"\"Black\":\"{blackPlayer}\","
                 + $"\"LastMove\":{game.LastMove},"
                 + $"\"YourColor\":\"{yourColor}\","
                 + $"\"OfferDraw\":{offerDraw},"
@@ -146,9 +211,9 @@ namespace ChessAPI.Models
             foreach (Side s in game.Sides)
             {
                 if (s.Color == "w")
-                    whitePlayer = Convert.ToString(s.PlayerID);
+                    whitePlayer = db.Players.Find(s.PlayerID).Name;
                 else if (s.Color == "b")
-                    blackPlayer = Convert.ToString(s.PlayerID);
+                    blackPlayer = db.Players.Find(s.PlayerID).Name;
             }
 
 
@@ -156,8 +221,8 @@ namespace ChessAPI.Models
                 + $"\"GameID\":{game.GameID},"
                 + $"\"FEN\":\"{game.FEN}\","
                 + $"\"Status\":\"{game.Status}\","
-                + $"\"White\":{whitePlayer},"
-                + $"\"Black\":{blackPlayer},"
+                + $"\"White\":\"{whitePlayer}\","
+                + $"\"Black\":\"{blackPlayer}\","
                 + $"\"LastMove\":{game.LastMove},"
                 + $"\"Winner\":\"{game.Winner}\""
                 + "}"

@@ -95,5 +95,9 @@ namespace ChessLogic
                     return true;
             return false;
         }
+        public string GetMoveColor()
+        {
+            return (board.moveColor == Color.black) ? "b" : "w";
+        }
     }
 }

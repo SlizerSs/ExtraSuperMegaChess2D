@@ -2,32 +2,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ChessClient;
 using ChessLogic;
 namespace ExtraSuperMegaChess2D
 {
-    public class GameViewModel : NotifyPropertyChanged
+    public class GameViewModel : NotifyPropertyChanged, EndGameInterface
     {
         private Board _board = new Board();
-        private Chess chess = new Chess();
-        private ICommand _newGameCommand;
-        private ICommand _clearCommand;
+        private Chess chess;
+        private ICommand _resignCommand;
         private ICommand _cellCommand;
         private string from;
         private string to;
         private string figure;
         private string move;
-
+        private string lastMove = "";
         public IEnumerable<char> Numbers => "87654321";
         public IEnumerable<char> Letters => "ABCDEFGH";
+        private Client client;
+        private Timer timer;
+        private PlayerInfo Player { get; set; }
+        private GameInfo Game { get; set; }
 
-        PlayerInfo Player { get; set; }
-        public GameViewModel(PlayerInfo player)
+        private Action EndGame;
+        public GameViewModel(PlayerInfo player, GameInfo game)
         {
+            chess = new Chess(game.FEN);
             Player = player;
+            Game = game;
+            client = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
+            Client client1 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
+            SetupBoard();
+            if (chess.GetMoveColor() == Game.YourColor)
+                MarkValidFigures();
+            TimerCallback tm = async x =>
+            {
+                Game = await client1.GetGameInfo(Game.GameID);
+                if(chess.fen != Game.FEN)
+                {
+                    chess = new Chess(Game.FEN);
+                    if (chess.GetMoveColor() == Game.YourColor)
+                    {
+                        SetupBoard();
+                        MarkValidFigures();
+                    }
+                }
+                if(Game.Status == "done")
+                {
+                    EndGame?.Invoke();
+                }
+
+            };
+            timer = new Timer(tm, null, 0, 1000);
+
+        }
+
+        event Action EndGameInterface.EndGame
+        {
+            add
+            {
+                EndGame += value;
+            }
+
+            remove
+            {
+                EndGame -= value;
+            }
         }
 
         public Board Board
@@ -40,29 +85,29 @@ namespace ExtraSuperMegaChess2D
             }
         }
 
-        public ICommand NewGameCommand
+        public ICommand ResignCommand
         {
             get
             {
-                return _newGameCommand ??
-                (_newGameCommand = new RelayCommand(parameter =>
+                return _resignCommand ??
+                (_resignCommand = new RelayCommand(async parameter =>
                 {
-                    chess = new Chess();
-                    SetupBoard();
-                    MarkValidFigures();
-                }));
-            }
+                    var win = Window.GetWindow(parameter as Button);
+                    win.IsHitTestVisible = false;
 
-        }
+                    ResignWindow resignWindow = new ResignWindow();
 
-        public ICommand ClearCommand
-        {
-            get
-            {
-                return _clearCommand ??
-                (_clearCommand = new RelayCommand(parameter =>
-                {
-                    Board = new Board();
+                    if (resignWindow.ShowDialog() == true)
+                    {
+                        Client client2 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
+                        await client2.EndGame(Game.GameID, false);
+
+                    }
+                    else
+                    {
+                        win.IsHitTestVisible = true;
+                    }
+
                 }));
             }
         }
@@ -72,7 +117,7 @@ namespace ExtraSuperMegaChess2D
             get
             {
                 return _cellCommand ??
-                (_cellCommand = new RelayCommand(parameter =>
+                (_cellCommand = new RelayCommand(async parameter =>
                 {
 
                     Cell cell = (Cell)parameter;
@@ -90,16 +135,20 @@ namespace ExtraSuperMegaChess2D
                         figure = ((char)activeCell.State).ToString();
 
                         move = figure + from + to;
-                        if (chess.Move(move)!=chess)
+                        if (chess.Move(move)!=chess && chess.GetMoveColor() == Game.YourColor && Game.Status=="play")
                         {
+                            Game = await client.SendMove(Game.GameID, move);
                             cell.State = activeCell.State;
 
                             activeCell.State = CellState.Empty;
-                            
+
                             chess = chess.Move(move);
+                            lastMove = move;
+                            UnMarkValidFigures();
                         }
                         UnMarkValidMoves();
-                        MarkValidFigures();
+
+                        //MarkValidFigures();
                         from = null;
                         to = null;
                         move = null;
@@ -117,6 +166,7 @@ namespace ExtraSuperMegaChess2D
         }
         private void MarkValidMoves(Cell fromCell)
         {
+
             foreach (string moves in chess.GetAllMoves())
             {
                 int x;
@@ -133,9 +183,8 @@ namespace ExtraSuperMegaChess2D
         }
         private void MarkValidFigures()
         {
-            foreach (Cell cell in Board)
-                cell.CanMove = false;
-            foreach(string moves in chess.GetAllMoves())
+            UnMarkValidFigures();
+            foreach (string moves in chess.GetAllMoves())
             {
                 int x;
                 int y;
@@ -144,6 +193,11 @@ namespace ExtraSuperMegaChess2D
             }
 
 
+        }
+        private void UnMarkValidFigures()
+        {
+            foreach (Cell cell in Board)
+                cell.CanMove = false;
         }
         public void GetCoord(string name, out int x, out int y)
         {
@@ -185,6 +239,13 @@ namespace ExtraSuperMegaChess2D
         void PlaceFigure(Board board,string figure, int x, int y)
         {
             board[y, x] = (CellState)Convert.ToChar(figure);
+        }
+        private void DisableWindow(Window win)
+        {
+            if (win == null)
+                return;
+
+            win.IsHitTestVisible = false;
         }
 
     }

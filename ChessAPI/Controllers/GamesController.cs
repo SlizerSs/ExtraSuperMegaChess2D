@@ -34,12 +34,20 @@ namespace ChessAPI.Controllers
         }
 
         // GET: Games/Details/5
-        public string Details(int userID, int id)
+        [HttpPost]
+        public string GameDetails()
         {
-            Game game = db.Games.Find(id);
+            GameSendMoveData gameData;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                gameData = JsonConvert.DeserializeObject<GameSendMoveData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Game game = db.Games.Find(gameData.ID);
             Logic logic = new Logic();
 
-            return logic.GameDetails(game, userID);
+            return logic.GameDetails(game, gameData.UserID);
         }
         [HttpPost]
         public string Details()
@@ -73,7 +81,34 @@ namespace ChessAPI.Controllers
             ViewBag.GameID = new SelectList(db.Sides, "GameID", "GameID");
             return logic.GameDetails(game, userID);
         }
-
+        [HttpPost]
+        public string ChangeStatus()
+        {
+            ChangeGameStatusData newStatus;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                newStatus = JsonConvert.DeserializeObject<ChangeGameStatusData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Logic logic = new Logic();
+            Game game = logic.ChangeStatus(newStatus.ID, newStatus.Status);
+            return logic.LiteGameDetails(game);
+        }
+        [HttpPost]
+        public string EndGame()
+        {
+            EndGameData endGameData;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                endGameData = JsonConvert.DeserializeObject<EndGameData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Logic logic = new Logic();
+            Game game = logic.EndGame(endGameData.ID, endGameData.UserID, endGameData.IsWinner);
+            return logic.LiteGameDetails(game);
+        }
         // POST: Games/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в разделе https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -85,7 +120,7 @@ namespace ChessAPI.Controllers
         //    {
         //        db.Games.Add(game);
         //        db.SaveChanges();
-                
+
         //    }
 
         //    return new JavaScriptSerializer().Serialize(game);

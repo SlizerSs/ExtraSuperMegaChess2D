@@ -18,4 +18,21 @@ namespace ClientServerApi
         public string Move { get; set; }
 
     }
+    public class MakeNewSideData
+    {
+        public int UserID { get; set; }
+        public int ID { get; set; }
+        public string Color { get; set; }
+    }
+    public class ChangeGameStatusData
+    {
+        public int ID { get; set; }
+        public string Status { get; set; }
+    }
+    public class EndGameData
+    {
+        public int ID { get; set; }
+        public int UserID { get; set; }
+        public bool IsWinner { get; set; }
+    }
 }

@@ -45,11 +45,16 @@ namespace ChessClient
             return new GameInfo(ParseJSON(await CallServer()));
         }
 
+        public async Task<GameInfo> GetGameInfo(int GameID)
+        {
+            return new GameInfo(ParseJSON(await CallServer(GameID)));
+        }
+
         public async Task<List<GameInfo>> GetAllGames()
         {
             List<GameInfo> result = new List<GameInfo>();
 
-            foreach (NameValueCollection col in MultipleParseJSON(await CallServerForGames()))
+            foreach (NameValueCollection col in MultipleParseJSONForGames(await CallServerForGames()))
                 result.Add(new GameInfo(col));
             return result;
         }
@@ -57,6 +62,10 @@ namespace ChessClient
         public async Task<GameInfo> SendMove(int id, string move)
         {
             return new GameInfo(ParseJSON(await CallServer(id, move)));
+        }
+        public async Task<GameInfo> ChangeStatus(int gameID, string newStatus)
+        {
+            return new GameInfo(ParseJSON(await CallServerChangeStatus(gameID, newStatus)));
         }
 
         public async Task<PlayerInfo> MakeNewPlayer(string name, string password)
@@ -67,9 +76,30 @@ namespace ChessClient
         {
             List<PlayerInfo> result = new List<PlayerInfo>();
 
-            foreach (NameValueCollection col in MultipleParseJSON(await CallServerForPlayer()))
+            foreach (NameValueCollection col in MultipleParseJSONForPlayers(await CallServerForPlayer()))
                 result.Add(new PlayerInfo(col));
             return result;
+        }
+        public async Task MakeNewSide(int ID, string Color)
+        {
+            await CallServerForSide(ID, Color);
+            return;
+        }
+        public async Task EndGame(int gameID, bool IsWinner)
+        {
+            await CallServerForEndGame(gameID, IsWinner);
+            return;
+        }
+        private async Task<string> CallServer(int GameID)
+        {
+            //WebRequest request = WebRequest.Create(host + "/" + userID);
+            //    WebResponse response = request.GetResponse();
+            //    using (Stream stream = response.GetResponseStream())
+            //    using (StreamReader reader = new StreamReader(stream))
+            //        return reader.ReadToEnd();
+            var bodyData = JsonConvert.SerializeObject(new GameSendMoveData { UserID = userID, ID = GameID });
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/GameDetails/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
         private async Task<string> CallServer(int param1, string param2 = "")
@@ -131,6 +161,39 @@ namespace ChessClient
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
+        private async Task<string> CallServerForSide(int ID, string Color)
+        {
+            //WebRequest request = WebRequest.Create(host + userID + "/" + param);
+            //WebResponse response = request.GetResponse();
+            //using (Stream stream = response.GetResponseStream())
+            //using (StreamReader reader = new StreamReader(stream))
+            //    return reader.ReadToEnd();
+            var bodyData = JsonConvert.SerializeObject(new MakeNewSideData { UserID = userID, ID = ID, Color = Color });
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Sides/Create/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        private async Task<string> CallServerChangeStatus(int gameID, string newStatus)
+        {
+            //WebRequest request = WebRequest.Create(host + "/" + userID);
+            //    WebResponse response = request.GetResponse();
+            //    using (Stream stream = response.GetResponseStream())
+            //    using (StreamReader reader = new StreamReader(stream))
+            //        return reader.ReadToEnd();
+            var bodyData = JsonConvert.SerializeObject(new ChangeGameStatusData { ID= gameID, Status = newStatus });
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/ChangeStatus/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        private async Task<string> CallServerForEndGame(int gameID, bool IsWinner)
+        {
+            //WebRequest request = WebRequest.Create(host + userID + "/" + param);
+            //WebResponse response = request.GetResponse();
+            //using (Stream stream = response.GetResponseStream())
+            //using (StreamReader reader = new StreamReader(stream))
+            //    return reader.ReadToEnd();
+            var bodyData = JsonConvert.SerializeObject(new EndGameData { UserID = userID, ID = gameID, IsWinner = IsWinner });
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/EndGame/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
         private NameValueCollection ParseJSON(string json)
         {
             NameValueCollection list = new NameValueCollection();
@@ -143,7 +206,7 @@ namespace ChessClient
 
             return list;
         }
-        private List<NameValueCollection> MultipleParseJSON(string json)
+        private List<NameValueCollection> MultipleParseJSONForPlayers(string json)
         {
             NameValueCollection list = new NameValueCollection();
             List<NameValueCollection> result = new List<NameValueCollection>();
@@ -161,8 +224,25 @@ namespace ChessClient
                 }
             }
 
-
-
+            return result;
+        }
+        private List<NameValueCollection> MultipleParseJSONForGames(string json)
+        {
+            NameValueCollection list = new NameValueCollection();
+            List<NameValueCollection> result = new List<NameValueCollection>();
+            string pattern = @"""(\w+)\"":""?([^,""}]*)""?";
+            int x = 0;
+            foreach (Match m in Regex.Matches(json, pattern))
+            {
+                if (m.Groups.Count == 3)
+                    list[m.Groups[1].Value] = m.Groups[2].Value;
+                x++;
+                if (x%7==0)
+                {
+                    result.Add(list);
+                    list = new NameValueCollection();
+                }
+            }
 
             return result;
         }
