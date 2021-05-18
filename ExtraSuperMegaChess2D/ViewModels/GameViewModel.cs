@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,6 +29,12 @@ namespace ExtraSuperMegaChess2D
         private Timer timer;
         private PlayerInfo Player { get; set; }
         private GameInfo Game { get; set; }
+        private string _opponentName;
+        public string OpponentName
+        {
+            get => _opponentName;
+            set { _opponentName = value; OnPropertyChanged(); }
+        }
 
         private Action EndGame;
         public GameViewModel(PlayerInfo player, GameInfo game)
@@ -37,13 +44,18 @@ namespace ExtraSuperMegaChess2D
             Game = game;
             client = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
             Client client1 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
+            Client client2 = new Client("http://localhost:56213/Games/OpponentDetails", Player.PlayerID);
+
             SetupBoard();
             if (chess.GetMoveColor() == Game.YourColor)
                 MarkValidFigures();
+            string n = "";
             TimerCallback tm = async x =>
             {
                 Game = await client1.GetGameInfo(Game.GameID);
-                if(chess.fen != Game.FEN)
+                await GetOpponentName(n, client2);
+
+                if (chess.fen != Game.FEN)
                 {
                     chess = new Chess(Game.FEN);
                     if (chess.GetMoveColor() == Game.YourColor)
@@ -54,7 +66,15 @@ namespace ExtraSuperMegaChess2D
                 }
                 if(Game.Status == "done")
                 {
-                    EndGame?.Invoke();
+                    Client playerClient = new Client("http://localhost:56213/Players/Details", Player.PlayerID);
+                    Player = await playerClient.GetPlayerInfo();
+                    Application.Current.Dispatcher.Invoke( () => {
+                        timer.Dispose();
+                        StartWindow sw = new StartWindow(Player);
+                        sw.Show();
+                        EndGame?.Invoke();
+                    });
+                    
                 }
 
             };
@@ -92,20 +112,12 @@ namespace ExtraSuperMegaChess2D
                 return _resignCommand ??
                 (_resignCommand = new RelayCommand(async parameter =>
                 {
-                    var win = Window.GetWindow(parameter as Button);
-                    win.IsHitTestVisible = false;
-
                     ResignWindow resignWindow = new ResignWindow();
 
                     if (resignWindow.ShowDialog() == true)
                     {
                         Client client2 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
                         await client2.EndGame(Game.GameID, false);
-
-                    }
-                    else
-                    {
-                        win.IsHitTestVisible = true;
                     }
 
                 }));
@@ -143,6 +155,11 @@ namespace ExtraSuperMegaChess2D
                             activeCell.State = CellState.Empty;
 
                             chess = chess.Move(move);
+
+                            if (chess.IsMate())
+                            {
+                                await client.EndGame(Game.GameID, true);
+                            }
                             lastMove = move;
                             UnMarkValidFigures();
                         }
@@ -240,12 +257,21 @@ namespace ExtraSuperMegaChess2D
         {
             board[y, x] = (CellState)Convert.ToChar(figure);
         }
-        private void DisableWindow(Window win)
+        async Task PeriodicRefresh()
         {
-            if (win == null)
-                return;
+            while (true)
+            {
+                await Task.Delay(1000);
 
-            win.IsHitTestVisible = false;
+            }
+        }
+        async Task GetOpponentName(string n, Client client2)
+        {
+            n = (await client2.GetOpponent(Game.GameID)).Name;
+            if (n == Player.Name)
+                OpponentName = "Ожидаем";
+            else
+                OpponentName = n;
         }
 
     }

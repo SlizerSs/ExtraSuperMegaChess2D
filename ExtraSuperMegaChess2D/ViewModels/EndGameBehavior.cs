@@ -11,13 +11,22 @@ namespace ExtraSuperMegaChess2D
 {
     class EndGameBehavior : Behavior<Window>
     {
-        public static readonly DependencyProperty EndGameProperty = DependencyProperty.Register("", typeof(EndGameInterface), typeof(EndGameBehavior), new FrameworkPropertyMetadata(default(EndGameInterface)));
+        public static readonly DependencyProperty EndGameProperty = DependencyProperty.Register(nameof(EndGame), typeof(EndGameInterface), typeof(EndGameBehavior), new FrameworkPropertyMetadata(default(EndGameInterface), OnCallback));
+
+        private static void OnCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(d is EndGameBehavior x)
+            {
+                x.EndGame.EndGame += x.OnEndGame;
+            }
+        }
+
         public EndGameInterface EndGame { get => (EndGameInterface)GetValue(EndGameProperty);
                                           set => SetValue(EndGameProperty, value);
         }
         protected override void OnAttached()
         {
-            EndGame.EndGame += OnEndGame;
+
         }
 
         protected override void OnDetaching()

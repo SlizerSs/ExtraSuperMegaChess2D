@@ -80,10 +80,18 @@ namespace ChessClient
                 result.Add(new PlayerInfo(col));
             return result;
         }
+        public async Task<PlayerInfo> GetPlayerInfo()
+        {
+            return new PlayerInfo(ParseJSON(await CallServerForPlayerInfo()));
+        }
         public async Task MakeNewSide(int ID, string Color)
         {
             await CallServerForSide(ID, Color);
             return;
+        }
+        public async Task<PlayerInfo> GetOpponent(int ID)
+        {
+            return new PlayerInfo(ParseJSON(await CallServerForOpponent(ID)));
         }
         public async Task EndGame(int gameID, bool IsWinner)
         {
@@ -92,11 +100,6 @@ namespace ChessClient
         }
         private async Task<string> CallServer(int GameID)
         {
-            //WebRequest request = WebRequest.Create(host + "/" + userID);
-            //    WebResponse response = request.GetResponse();
-            //    using (Stream stream = response.GetResponseStream())
-            //    using (StreamReader reader = new StreamReader(stream))
-            //        return reader.ReadToEnd();
             var bodyData = JsonConvert.SerializeObject(new GameSendMoveData { UserID = userID, ID = GameID });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/GameDetails/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -104,22 +107,12 @@ namespace ChessClient
 
         private async Task<string> CallServer(int param1, string param2 = "")
         {
-            //WebRequest request = WebRequest.Create(host + userID + "/" + param);
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
             var bodyData = JsonConvert.SerializeObject(new GameSendMoveData { UserID = userID, ID = param1, Move = param2 });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/Details/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         private async Task<string> CallServer()
         {
-            //WebRequest request = WebRequest.Create(host + "/" + userID);
-            //    WebResponse response = request.GetResponse();
-            //    using (Stream stream = response.GetResponseStream())
-            //    using (StreamReader reader = new StreamReader(stream))
-            //        return reader.ReadToEnd();
             var bodyData = JsonConvert.SerializeObject(userID);
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/Create/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -128,68 +121,55 @@ namespace ChessClient
         private async Task<string> CallServerForPlayer(string param1 = "", string param2 = "")
         {
 
-            //WebRequest request = WebRequest.Create(host + param1 + "/" + param2);
-            //request.Method = "POST";
-            //request.
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
             var bodyData = JsonConvert.SerializeObject(new UserLoginData { Login = param1, HashedPassword = param2 });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Players/Create/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         private async Task<string> CallServerForPlayer()
         {
-            //WebRequest request = WebRequest.Create(host);
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
+
             var bodyData = "";
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Players", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
+        private async Task<string> CallServerForPlayerInfo()
+        {
+
+            var bodyData = JsonConvert.SerializeObject(userID);
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Players/Details/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        private async Task<string> CallServerForOpponent(int gameID)
+        {
+
+            var bodyData = JsonConvert.SerializeObject(new GetOpponentData { ID = gameID , UserID = userID});
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/OpponentDetails/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
         private async Task<string> CallServerForGames()
         {
-            //WebRequest request = WebRequest.Create(host);
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
+
             var bodyData = "";
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         private async Task<string> CallServerForSide(int ID, string Color)
         {
-            //WebRequest request = WebRequest.Create(host + userID + "/" + param);
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
+
             var bodyData = JsonConvert.SerializeObject(new MakeNewSideData { UserID = userID, ID = ID, Color = Color });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Sides/Create/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         private async Task<string> CallServerChangeStatus(int gameID, string newStatus)
         {
-            //WebRequest request = WebRequest.Create(host + "/" + userID);
-            //    WebResponse response = request.GetResponse();
-            //    using (Stream stream = response.GetResponseStream())
-            //    using (StreamReader reader = new StreamReader(stream))
-            //        return reader.ReadToEnd();
+
             var bodyData = JsonConvert.SerializeObject(new ChangeGameStatusData { ID= gameID, Status = newStatus });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/ChangeStatus/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         private async Task<string> CallServerForEndGame(int gameID, bool IsWinner)
         {
-            //WebRequest request = WebRequest.Create(host + userID + "/" + param);
-            //WebResponse response = request.GetResponse();
-            //using (Stream stream = response.GetResponseStream())
-            //using (StreamReader reader = new StreamReader(stream))
-            //    return reader.ReadToEnd();
+
             var bodyData = JsonConvert.SerializeObject(new EndGameData { UserID = userID, ID = gameID, IsWinner = IsWinner });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/EndGame/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);

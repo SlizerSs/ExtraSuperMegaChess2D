@@ -35,10 +35,18 @@ namespace ChessAPI.Controllers
         }
 
         // GET: Players/Details/5
-        public string Details(int? id)
+        [HttpPost]
+        public string Details()
         {
+            int userID;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                userID = JsonConvert.DeserializeObject<int>(body);
+                
+            }
             Logic logic = new Logic();
-            Player player = db.Players.Find(id);
+            Player player = db.Players.Find(userID);
             return logic.PlayerDetails(player);
         }
         // GET: Players/Details/name

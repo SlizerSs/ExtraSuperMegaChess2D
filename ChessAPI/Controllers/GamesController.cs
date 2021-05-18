@@ -64,6 +64,20 @@ namespace ChessAPI.Controllers
             return logic.GameDetails(game, moveData.UserID);
         }
         [HttpPost]
+        public string OpponentDetails()
+        {
+            GetOpponentData getopponentData;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                getopponentData = JsonConvert.DeserializeObject<GetOpponentData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Logic logic = new Logic();
+            Player player = logic.GetOpponent(getopponentData.ID, getopponentData.UserID);
+            return logic.PlayerDetails(player);
+        }
+        [HttpPost]
         // POST: Games/Create
         public string Create()
         {

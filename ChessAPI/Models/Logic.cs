@@ -32,6 +32,10 @@ namespace ChessAPI.Models
         {
             return db.Games.Find(id);
         }
+        public Player GetPlayer(int playerID)
+        {
+            return db.Players.Find(playerID);
+        }
         public Game MakeMove(int id, string move)
         {
             Game game = GetGame(id);
@@ -80,8 +84,8 @@ namespace ChessAPI.Models
             Game game = GetGame(id);
             if (game == null)
                 return game;
-            Player playerWinner = new Player();
-            Player playerLoser = new Player();
+            Player playerWinner = null;
+            Player playerLoser = null;
             game.Status = "done";
             if (IsWinner)
             {
@@ -109,17 +113,38 @@ namespace ChessAPI.Models
                         playerLoser = db.Players.Find(s.PlayerID);
                 }
             }
-            playerWinner.PlayerStatistic.Games += 1;
-            playerWinner.PlayerStatistic.Wins += 1;
+            if (playerWinner != null)
+            {
+                playerWinner.PlayerStatistic.Games += 1;
+                playerWinner.PlayerStatistic.Wins += 1;
+            }
 
-            playerLoser.PlayerStatistic.Games += 1;
-            playerLoser.PlayerStatistic.Loses += 1;
+            if (playerLoser != null)
+            {
+                playerLoser.PlayerStatistic.Games += 1;
+                playerLoser.PlayerStatistic.Loses += 1;
+            }
+
+            
 
             db.Entry(game).State = System.Data.Entity.EntityState.Modified;
-            db.Entry(playerWinner).State = System.Data.Entity.EntityState.Modified;
-            db.Entry(playerLoser).State = System.Data.Entity.EntityState.Modified;
+            if (playerWinner != null)
+                db.Entry(playerWinner).State = System.Data.Entity.EntityState.Modified;
+            if (playerLoser != null)
+                db.Entry(playerLoser).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             return game;
+        }
+        public Player GetOpponent(int gameID, int UserID)
+        {
+            Game game = db.Games.Find(gameID);
+            Player opponent = null;
+            foreach(Side s in game.Sides)
+            {
+                if (s.PlayerID != UserID)
+                    opponent = db.Players.Find(s.PlayerID);
+            }
+            return opponent ?? db.Players.Find(UserID);
         }
         public Player MakeNewPlayer(string name, string password)
         {

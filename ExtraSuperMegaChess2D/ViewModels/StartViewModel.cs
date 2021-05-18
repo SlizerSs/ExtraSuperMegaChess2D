@@ -15,8 +15,6 @@ namespace ExtraSuperMegaChess2D
 {
     public class StartViewModel : NotifyPropertyChanged
     {
-        //полностью оформить игру
-        //сдача, предложение ничьи в игре, завершение игры и т.д.
 
         private RelayCommand startNewGameCommand;
         private RelayCommand connectToGameCommand;

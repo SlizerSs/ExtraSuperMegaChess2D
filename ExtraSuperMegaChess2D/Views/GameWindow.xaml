@@ -6,15 +6,18 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:ExtraSuperMegaChess2D"
         xmlns:controls="clr-namespace:ExtraSuperMegaChess2D.Controls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
                 Title="WPF Window" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance local:GameViewModel}"
         SnapsToDevicePixels="True">
+
     <i:Interaction.Behaviors>
         <local:EndGameBehavior EndGame="{Binding}" />
     </i:Interaction.Behaviors>
     <Window.Resources>
         <local:CellColorConverter x:Key="CellColorConverter"/>
+        <local:StringToNullableDecimalConverter x:Key="nullDecimalConv"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -29,8 +32,18 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="-5,0">
-            <Button x:Name="DrawButton" Content="Offer Draw" Margin="5" Padding="10,5" Command="{Binding NewGameCommand}" CommandParameter="{Binding ElementName=DrawButton}"/>
             <Button x:Name="ResignButton" Content="Resign" Margin="5" Padding="10,5" Command="{Binding ResignCommand}" CommandParameter="{Binding ElementName=ResignButton}"/>
+            <Label x:Name="OpponentName"  Content="{Binding Path=OpponentName, Converter={StaticResource nullDecimalConv}}" ContentStringFormat="Ваш противник: {0}"  >
+                <!--<Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                                <Setter Property="Content" Value="Ваш противник: "/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>-->
+            </Label>
         </StackPanel>
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Numbers}" Width="21">
             <ItemsControl.ItemTemplate>
