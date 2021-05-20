@@ -113,21 +113,20 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\CellState.cs" />
-    <Compile Include="Models\FigureObject.cs" />
-    <Compile Include="Models\HashGenerator.cs" />
+    <Compile Include="Helpers\HashGenerator.cs" />
     <Compile Include="Models\UserModel.cs" />
-    <Compile Include="ViewModels\CellColorConverter.cs" />
-    <Compile Include="ViewModels\ConnectToGameConverter.cs" />
-    <Compile Include="ViewModels\EndGameBehavior.cs" />
-    <Compile Include="ViewModels\EndGameInterface.cs" />
+    <Compile Include="Converters\CellColorConverter.cs" />
+    <Compile Include="Converters\ConnectToGameConverter.cs" />
+    <Compile Include="Helpers\EndGameBehavior.cs" />
+    <Compile Include="Helpers\EndGameInterface.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="Models\NotifyPropertyChanged.cs" />
-    <Compile Include="Models\RelayCommand.cs" />
+    <Compile Include="Helpers\NotifyPropertyChanged.cs" />
+    <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
-    <Compile Include="ViewModels\PlayerColorConverter.cs" />
+    <Compile Include="Converters\PlayerColorConverter.cs" />
     <Compile Include="ViewModels\ResignViewModel.cs" />
     <Compile Include="ViewModels\StartViewModel.cs" />
-    <Compile Include="ViewModels\StringToNullableDecimalConverter.cs" />
+    <Compile Include="Converters\StringToNullableDecimalConverter.cs" />
     <Compile Include="Views\GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
@@ -207,6 +206,7 @@
       <Name>ChessClient</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

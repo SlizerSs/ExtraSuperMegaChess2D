@@ -24,7 +24,7 @@ namespace ChessAPI.Controllers
             string result = "";
             Logic logic = new Logic();
 
-            var players = db.Players.Include(p => p.PlayerStatistic);
+            var players = db.Players;
 
             List<Player> list = players.ToList();
             foreach (Player pl in list)
@@ -70,9 +70,6 @@ namespace ChessAPI.Controllers
             }
             Logic logic = new Logic();
             Player player = logic.MakeNewPlayer(loginData.Login, loginData.HashedPassword);
-            PlayerStatistic ps = logic.MakeNewPS(player.PlayerID);
-
-            ViewBag.PlayerID = new SelectList(db.PlayerStatistics, "PlayerID", "PlayerID");
 
             return logic.PlayerDetails(player);
         }

@@ -15,8 +15,6 @@ namespace ChessClient
         public int Games { get; set; }
         public int Wins { get; set; }
         public int Loses { get; set; }
-        public int Draws { get; set; }
-        public int Resigns { get; set; }
 
 
         public PlayerInfo(NameValueCollection list)
@@ -27,8 +25,6 @@ namespace ChessClient
             Games = int.Parse(list["Games"]);
             Wins = int.Parse(list["Wins"]);
             Loses = int.Parse(list["Loses"]);
-            Draws = int.Parse(list["Draws"]);
-            Resigns = int.Parse(list["Resigns"]);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace ChessAPI.Models
 
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Player> Players { get; set; }
-        public virtual DbSet<PlayerStatistic> PlayerStatistics { get; set; }
         public virtual DbSet<Side> Sides { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
 
@@ -35,10 +34,6 @@ namespace ChessAPI.Models
             modelBuilder.Entity<Player>()
                 .Property(e => e.Password)
                 .IsUnicode(false);
-
-            modelBuilder.Entity<Player>()
-                .HasOptional(e => e.PlayerStatistic)
-                .WithRequired(e => e.Player);
 
             modelBuilder.Entity<Side>()
                 .Property(e => e.Color)

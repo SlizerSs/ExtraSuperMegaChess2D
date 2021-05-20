@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ClientServerApi
 {
-    public class UserLoginData
+    public class GetOpponentData
     {
-        public string Login { get; set; }
-        public string HashedPassword { get; set; }
+        public int ID { get; set; }
+        public int UserID { get; set; }
+        
     }
 }

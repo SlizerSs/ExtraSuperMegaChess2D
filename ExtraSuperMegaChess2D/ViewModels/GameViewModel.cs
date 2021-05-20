@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ChessClient;
 using ChessLogic;
-//using GalaSoft.MvvmLight.Command;
 
 namespace ExtraSuperMegaChess2D
 {
@@ -169,24 +168,19 @@ namespace ExtraSuperMegaChess2D
             get
             {
                 return _closingCommand ??
-                (_closingCommand = new RelayCommand(async parameter =>
+                (_closingCommand = new RelayCommand(parameter =>
                 {
-                    if (Game.Status != "done")
+                    
+                    if(Game.Status == "done")
                     {
-                        ResignWindow resignWindow = new ResignWindow();
 
-                        if (resignWindow.ShowDialog() == true)
-                        {
-                            Client client2 = new Client(Player.PlayerID);
-                            await client2.EndGame(Game.GameID, false, false);
-                        }
+                        string result = String.Empty;
+                        if (Game.Winner == Player.Name)
+                            result = "Поздравляем, вы выиграли :)";
+                        else
+                            result = "К сожалению, вы проиграли :(";
+                        MessageBox.Show(result);
                     }
-                    string result = String.Empty;
-                    if (Game.Winner == Player.Name)
-                        result = "Поздравляем, вы выиграли :)";
-                    else
-                        result = "К сожалению, вы проиграли :(";
-                    MessageBox.Show(result);
 
                 }));
             }

@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace ClientServerApi
 {
-    public class UserLoginData
+    public class GameSendMoveData
     {
-        public string Login { get; set; }
-        public string HashedPassword { get; set; }
+        public int UserID { get; set; }
+        public int ID { get; set; }
+        public string Move { get; set; }
+
     }
 }

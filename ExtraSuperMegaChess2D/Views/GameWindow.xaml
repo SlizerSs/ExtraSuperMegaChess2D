@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:ExtraSuperMegaChess2D.Controls"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-                Title="WPF Window" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
+        Title="WPF Window" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance local:GameViewModel}"
         SnapsToDevicePixels="True"
         Background="#dadada"
@@ -52,7 +52,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.Column="1" Margin="-5,0">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="ResignButton" Content="Resign" Margin="5" Padding="10,5" Command="{Binding ResignCommand}" CommandParameter="{Binding ElementName=ResignButton}"/>
+                <Button x:Name="ResignButton" Content="Сдаться" Margin="5" Padding="10,5" Command="{Binding ResignCommand}" CommandParameter="{Binding ElementName=ResignButton}"/>
                 <Label x:Name="YourColor"  Content="{Binding Path=Color, Converter={StaticResource playerColorConverter}}" ContentStringFormat="Ваш цвет: {0}"  >
                 </Label>
                 <Label x:Name="OpponentName"  Content="{Binding Path=OpponentName, Converter={StaticResource nullDecimalConv}}" ContentStringFormat="Ваш противник: {0}"  >

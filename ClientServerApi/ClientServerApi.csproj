@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeGameStatusData.cs" />
+    <Compile Include="EndGameData.cs" />
+    <Compile Include="GameSendMoveData.cs" />
+    <Compile Include="MakeNewSideData.cs" />
+    <Compile Include="GetOpponentData.cs" />
     <Compile Include="UserLoginData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

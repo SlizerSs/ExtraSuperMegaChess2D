@@ -204,7 +204,7 @@ namespace ChessClient
                 if (m.Groups.Count == 3)
                     list[m.Groups[1].Value] = m.Groups[2].Value;
                 x++;
-                if (x%8==0)
+                if (x%6==0)
                 {
                     result.Add(list);
                     list = new NameValueCollection();

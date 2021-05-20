@@ -17,8 +17,6 @@ namespace ChessAPI.Models
         [StringLength(1)]
         public string Color { get; set; }
 
-        public bool OffersDraw { get; set; }
-
         public virtual Game Game { get; set; }
 
         public virtual Player Player { get; set; }

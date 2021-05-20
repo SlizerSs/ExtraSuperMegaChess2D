@@ -22,7 +22,11 @@ namespace ChessAPI.Models
         [StringLength(255)]
         public string Password { get; set; }
 
-        public virtual PlayerStatistic PlayerStatistic { get; set; }
+        public int? Games { get; set; }
+
+        public int? Wins { get; set; }
+
+        public int? Loses { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Side> Sides { get; set; }

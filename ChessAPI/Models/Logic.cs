@@ -101,14 +101,14 @@ namespace ChessAPI.Models
 
                     if (playerWinner != null)
                     {
-                        playerWinner.PlayerStatistic.Games += 1;
-                        playerWinner.PlayerStatistic.Loses += 1;
+                        playerWinner.Games += 1;
+                        playerWinner.Loses += 1;
                     }
 
                     if (playerLoser != null)
                     {
-                        playerLoser.PlayerStatistic.Games += 1;
-                        playerLoser.PlayerStatistic.Loses += 1;
+                        playerLoser.Games += 1;
+                        playerLoser.Loses += 1;
                     }
                 }
             }
@@ -142,14 +142,14 @@ namespace ChessAPI.Models
                 }
                 if (playerWinner != null)
                 {
-                    playerWinner.PlayerStatistic.Games += 1;
-                    playerWinner.PlayerStatistic.Wins += 1;
+                    playerWinner.Games += 1;
+                    playerWinner.Wins += 1;
                 }
 
                 if (playerLoser != null)
                 {
-                    playerLoser.PlayerStatistic.Games += 1;
-                    playerLoser.PlayerStatistic.Loses += 1;
+                    playerLoser.Games += 1;
+                    playerLoser.Loses += 1;
                 }
             }
 
@@ -190,6 +190,9 @@ namespace ChessAPI.Models
             Player player = new Player();
             player.Name = name;
             player.Password = password;
+            player.Games = 0;
+            player.Wins = 0;
+            player.Loses = 0;
 
             db.Players.Add(player);
             db.SaveChanges();
@@ -202,28 +205,13 @@ namespace ChessAPI.Models
             side.GameID = GameID;
             side.PlayerID = PlayerID;
             side.Color = color;
-            side.OffersDraw = false;
 
             db.Sides.Add(side);
             db.SaveChanges();
 
             return side;
         }
-        public PlayerStatistic MakeNewPS(int PlayerID)
-        {
-            PlayerStatistic ps = new PlayerStatistic();
-            ps.PlayerID = PlayerID;
-            ps.Games = 0;
-            ps.Wins = 0;
-            ps.Loses = 0;
-            ps.Draws = 0;
-            ps.Resigns = 0;
-            
-            db.PlayerStatistics.Add(ps);
-            db.SaveChanges();
 
-            return ps;
-        }
         public string GameDetails(Game game, int playerID)
         {
             if (game == null)
@@ -231,7 +219,6 @@ namespace ChessAPI.Models
             string whitePlayer = "";
             string blackPlayer = "";
             string yourColor = "";
-            string offerDraw = "";
 
             foreach (Side s in game.Sides)
             {
@@ -245,10 +232,6 @@ namespace ChessAPI.Models
                     yourColor = s.Color;
                 }
 
-                if (s.OffersDraw)
-                {
-                    offerDraw = Convert.ToString(s.PlayerID);
-                }
             }
 
 
@@ -260,7 +243,6 @@ namespace ChessAPI.Models
                 + $"\"Black\":\"{blackPlayer}\","
                 + $"\"LastMove\":{game.LastMove},"
                 + $"\"YourColor\":\"{yourColor}\","
-                + $"\"OfferDraw\":{offerDraw},"
                 + $"\"Winner\":\"{game.Winner}\""
                 + "}"
                 ;
@@ -301,11 +283,9 @@ namespace ChessAPI.Models
                 + $"\"PlayerID\":{player.PlayerID},"
                 + $"\"Name\":\"{player.Name}\","
                 + $"\"Password\":\"{player.Password}\","
-                + $"\"Games\":{player.PlayerStatistic.Games},"
-                + $"\"Wins\":{player.PlayerStatistic.Wins},"
-                + $"\"Loses\":{player.PlayerStatistic.Loses},"
-                + $"\"Draws\":{player.PlayerStatistic.Draws},"
-                + $"\"Resigns\":{player.PlayerStatistic.Resigns}"
+                + $"\"Games\":{player.Games},"
+                + $"\"Wins\":{player.Wins},"
+                + $"\"Loses\":{player.Loses},"
                 + "}"
                 ;
         }

@@ -10,9 +10,11 @@ namespace ExtraSuperMegaChess2D
     class UserModel
     {
         [Required(ErrorMessage = "Не указано имя пользователя")]
-        [StringLength(30, MinimumLength = 3, ErrorMessage = "Длина имени должна быть от 3 до 30")]
+        [RegularExpression(@"\w*", ErrorMessage = "Имя пользователя должно содержать буквы и цифры")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Длина имени пользователя должна быть от 3 до 30")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Не указан пароль")]
+        [RegularExpression(@"\w*", ErrorMessage = "Пароль должен содержать буквы и цифры")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина пароля должна быть от 3 до 50")]
         public string Password { get; set; }
         //[Required(ErrorMessage = "Подтвердите пароль")]

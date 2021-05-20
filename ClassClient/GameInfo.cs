@@ -16,7 +16,6 @@ namespace ChessClient
         public string Black { get; set; }
         public string LastMove { get; set; }
         public string YourColor { get; set; }
-        public string OfferDraw { get; set; }
         public string Winner { get; set; }
 
         public GameInfo(NameValueCollection list)
@@ -29,7 +28,6 @@ namespace ChessClient
             Black = list["Black"];
             LastMove = list["LastMove"];
             YourColor = list["YourColor"];
-            OfferDraw = list["OfferDraw"];
             Winner = list["Winner"];
         }
     }
