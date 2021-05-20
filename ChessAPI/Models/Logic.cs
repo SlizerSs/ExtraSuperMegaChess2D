@@ -79,7 +79,7 @@ namespace ChessAPI.Models
             db.SaveChanges();
             return game;
         }
-        public Game EndGame(int id, int UserID, bool IsWinner)
+        public Game EndGame(int id, int UserID, bool IsWinner, bool IsStalemate)
         {
             Game game = GetGame(id);
             if (game == null)
@@ -87,42 +87,70 @@ namespace ChessAPI.Models
             Player playerWinner = null;
             Player playerLoser = null;
             game.Status = "done";
-            if (IsWinner)
+            if (IsStalemate)
             {
                 foreach (Side s in game.Sides)
                 {
                     if (s.PlayerID == UserID)
                     {
                         playerWinner = db.Players.Find(s.PlayerID);
-                        game.Winner = playerWinner.Name;
+                        game.Winner = "nobody";
                     }
                     else
                         playerLoser = db.Players.Find(s.PlayerID);
+
+                    if (playerWinner != null)
+                    {
+                        playerWinner.PlayerStatistic.Games += 1;
+                        playerWinner.PlayerStatistic.Loses += 1;
+                    }
+
+                    if (playerLoser != null)
+                    {
+                        playerLoser.PlayerStatistic.Games += 1;
+                        playerLoser.PlayerStatistic.Loses += 1;
+                    }
                 }
             }
             else
             {
-                foreach (Side s in game.Sides)
+                if (IsWinner)
                 {
-                    if (s.PlayerID != UserID)
+                    foreach (Side s in game.Sides)
                     {
-                        playerWinner = db.Players.Find(s.PlayerID);
-                        game.Winner = playerWinner.Name;
+                        if (s.PlayerID == UserID)
+                        {
+                            playerWinner = db.Players.Find(s.PlayerID);
+                            game.Winner = playerWinner.Name;
+                        }
+                        else
+                            playerLoser = db.Players.Find(s.PlayerID);
                     }
-                    else
-                        playerLoser = db.Players.Find(s.PlayerID);
                 }
-            }
-            if (playerWinner != null)
-            {
-                playerWinner.PlayerStatistic.Games += 1;
-                playerWinner.PlayerStatistic.Wins += 1;
-            }
+                else
+                {
+                    foreach (Side s in game.Sides)
+                    {
+                        if (s.PlayerID != UserID)
+                        {
+                            playerWinner = db.Players.Find(s.PlayerID);
+                            game.Winner = playerWinner.Name;
+                        }
+                        else
+                            playerLoser = db.Players.Find(s.PlayerID);
+                    }
+                }
+                if (playerWinner != null)
+                {
+                    playerWinner.PlayerStatistic.Games += 1;
+                    playerWinner.PlayerStatistic.Wins += 1;
+                }
 
-            if (playerLoser != null)
-            {
-                playerLoser.PlayerStatistic.Games += 1;
-                playerLoser.PlayerStatistic.Loses += 1;
+                if (playerLoser != null)
+                {
+                    playerLoser.PlayerStatistic.Games += 1;
+                    playerLoser.PlayerStatistic.Loses += 1;
+                }
             }
 
             
@@ -145,6 +173,17 @@ namespace ChessAPI.Models
                     opponent = db.Players.Find(s.PlayerID);
             }
             return opponent ?? db.Players.Find(UserID);
+        }
+        public string GetPlayerColor(int gameID, int UserID)
+        {
+            Game game = db.Games.Find(gameID);
+            string color = "";
+            foreach(Side s in game.Sides)
+            {
+                if (s.PlayerID == UserID)
+                    color = s.Color;
+            }
+            return color;
         }
         public Player MakeNewPlayer(string name, string password)
         {

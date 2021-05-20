@@ -3,16 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ExtraSuperMegaChess2D"
+        xmlns:local="clr-namespace:ExtraSuperMegaChess2D" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="StartWindow"
-        MinHeight="500px" MinWidth="700px"
-        d:DataContext="{d:DesignInstance local:StartViewModel}"
-        >
+        MinHeight="500px" MinWidth="1000px"
+        d:DataContext="{d:DesignInstance local:StartViewModel} "
+        Background="#dadada"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Verdana">
     <Window.Resources>
         <Style x:Key="VerticalCenterLeft">
             <Setter Property="Control.VerticalAlignment" Value="Center" />
             <Setter Property="Control.Margin" Value="20,0,0,0" />
+        </Style>
+        <Style x:Key="VerticalCenterLeftWithoutMargin">
+            <Setter Property="Control.VerticalAlignment" Value="Center" />
+            <Setter Property="Control.Margin" Value="0,0,0,0" />
         </Style>
         <Style x:Key="VerticalCenterRight">
             <Setter Property="Control.VerticalAlignment" Value="Center" />
@@ -22,104 +28,137 @@
             <Setter Property="Control.VerticalAlignment" Value="Center" />
             <Setter Property="Control.Margin" Value="20,0,20,0" />
         </Style>
+        <Style x:Key="ButtonVerticalCenterLeft" TargetType="Button">
+            <Setter Property="Control.VerticalAlignment" Value="Center" />
+            <Setter Property="Control.Background" Value="#204969" />
+            <Setter Property="Control.Foreground" Value="#fff7f7" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Control.Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Control.Background" Value="#204969" />
+            <Setter Property="Control.Foreground" Value="#fff7f7" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Control.Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <local:ConnectToGameConverter x:Key="ConnectToGameConverter"/>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="8*"/>
-        </Grid.RowDefinitions>
-
-        <Label Content="{Binding Path=Player.Name}" ContentStringFormat="Player: {0}" Grid.Row="0" Grid.Column="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
-
-        <Image Source="C:\z\Visual Studio Projects\kursach\ExtraSuperMegaChess2D\ExtraSuperMegaChess2D\Images\Flag_of_the_United_Kingdom.png" Grid.Row="0" Grid.Column="1" MaxHeight="50px" HorizontalAlignment="Right" Style="{StaticResource VerticalCenterRight}"/>
-
-        <Grid Grid.Row="1" Grid.Column="0" Margin="0,50,0,50">
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy, IsAsync=true}" >
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Label Content="Statistics: " Grid.Row="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
-
-            <Label Content="{Binding Path=Player.Games}" ContentStringFormat="Games: {0}" Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
-
-            <Label  Content="{Binding Path=Player.Wins}" ContentStringFormat="Wins: {0}" Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
-
-            <Label Content="{Binding Path=Player.Loses}" ContentStringFormat="Loses: {0}" Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
-
-            <Label Content="{Binding Path=Player.Draws}" ContentStringFormat="Draws: {0}" Grid.Row="4" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
-
-            <Label Content="{Binding Path=Player.Resigns}" ContentStringFormat="Resigns: {0}" Grid.Row="5" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
-
-        </Grid>
-
-        <Grid Grid.Row="1" Grid.Column="1" Margin="50,50,50,50">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="7*"/>
+                <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="StartGameButton" Command="{Binding Path=StartNewGameCommand}" CommandParameter="{Binding ElementName=StartGameButton}" Content="Start new game" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Left"  Style="{StaticResource VerticalCenterLeft}" />
+            <Label Content="{Binding Path=Player.Name}" ContentStringFormat="Игрок: {0}" Grid.Row="0" Grid.Column="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
 
-            <Grid Grid.Row="1" Margin="0,0,0,0">
+            <!--<Image Source="C:\z\Visual Studio Projects\kursach\ExtraSuperMegaChess2D\ExtraSuperMegaChess2D\Images\Flag_of_the_United_Kingdom.png" Grid.Row="0" Grid.Column="1" MaxHeight="50px" HorizontalAlignment="Right" Style="{StaticResource VerticalCenterRight}"/>-->
+
+            <Grid Grid.Row="1" Grid.Column="0" Margin="0,50,0,50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Статистика: " Grid.Row="0" FontSize="16px" Style="{StaticResource VerticalCenterLeft}" />
+
+                <Label Content="{Binding Path=Player.Games}" ContentStringFormat="Количество игр: {0}" Grid.Row="1" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+
+                <Label  Content="{Binding Path=Player.Wins}" ContentStringFormat="Количество побед: {0}" Grid.Row="2" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+
+                <Label Content="{Binding Path=Player.Loses}" ContentStringFormat="Количество поражений: {0}" Grid.Row="3" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
+
+
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,20,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
                     <RowDefinition Height="7*"/>
                 </Grid.RowDefinitions>
 
-                <Label Content="Active Games" Grid.Row="0" FontSize="14px" Style="{StaticResource VerticalCenterLeft}" />
 
-                <ListBox Grid.Row="1" x:Name="gamesList" ItemsSource="{Binding Path=Games, UpdateSourceTrigger=PropertyChanged}">
-                    <ListBox.ItemTemplate >
-                        <DataTemplate>
-                            <Border BorderThickness="2" BorderBrush="Black">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}"/>
+                <Grid Grid.Row="0" Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Акивные игры" FontSize="14px" Style="{StaticResource VerticalCenterLeftWithoutMargin}" />
+                        <Button Grid.Column="1" x:Name="StartGameButton" Command="{Binding Path=StartNewGameCommand}" CommandParameter="{Binding ElementName=StartGameButton}" Content="Начать новую игру" Grid.Row="0" FontSize="14px" Padding="3,3,3,3"  HorizontalAlignment="Right"  Style="{StaticResource ButtonVerticalCenterLeft}" />
+
+                    </Grid>
+
+                    <ListBox Grid.Row="1" x:Name="gamesList" ItemsSource="{Binding Path=Games, UpdateSourceTrigger=PropertyChanged}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="2" BorderBrush="Black">
+                                    <Grid Background="#dbdbdb" Height="40px">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="0" TextTrimming="CharacterEllipsis" Margin="5 0 5 0" Text="{Binding StringFormat=ID: {0}, Path=GameID, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Белый игрок: {0}, Path=White, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="2" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Чёрный игрок: {0}, Path=Black, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="3" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Статус: {0}, Path=Status, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <!--<Label Grid.Column="0" Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}"/>
                                     <Label Grid.Column="1" Content="{Binding Path=White, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="w: {0}"/>
                                     <Label Grid.Column="2" Content="{Binding Path=Black, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="b: {0}"/>
-                                    <Label Grid.Column="3" Content="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Status: {0}"/>
-                                    <Button Grid.Column="4" Command="{Binding Path=DataContext.ConnectToGameCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Content="Играть" >
-                                        <Button.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource ConnectToGameConverter}">
-                                                <Binding Path="GameID"/>
-                                                <Binding ElementName="gamesList"/>
-                                            </MultiBinding>
-                                        </Button.CommandParameter>
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                
+                                    <Label Grid.Column="3" Content="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Status: {0}"/>-->
+                                        <Button  VerticalAlignment="Center" HorizontalAlignment="Right" Height="35" Margin="5 0 5 0" Padding="5 0 5 0" Grid.Column="4" Command="{Binding Path=DataContext.ConnectToGameCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Content="Играть" >
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource ConnectToGameConverter}">
+                                                    <Binding Path="GameID"/>
+                                                    <Binding ElementName="gamesList"/>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
             </Grid>
         </Grid>
-    </Grid>
+    </xctk:BusyIndicator>
 </Window>

@@ -34,6 +34,7 @@ namespace ClientServerApi
         public int ID { get; set; }
         public int UserID { get; set; }
         public bool IsWinner { get; set; }
+        public bool IsStalemate { get; set; }
     }
     public class GetOpponentData
     {

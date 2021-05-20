@@ -10,14 +10,33 @@
         mc:Ignorable="d"
                 Title="WPF Window" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance local:GameViewModel}"
-        SnapsToDevicePixels="True">
-
+        SnapsToDevicePixels="True"
+        Background="#dadada"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Verdana">
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction 
+                Command="{Binding ClosingCommand}"
+                PassEventArgsToCommand="True"  />
+        </i:EventTrigger>
+  </i:Interaction.Triggers>
     <i:Interaction.Behaviors>
         <local:EndGameBehavior EndGame="{Binding}" />
     </i:Interaction.Behaviors>
     <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Control.Background" Value="#204969" />
+            <Setter Property="Control.Foreground" Value="#fff7f7" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Control.Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <local:CellColorConverter x:Key="CellColorConverter"/>
         <local:StringToNullableDecimalConverter x:Key="nullDecimalConv"/>
+        <local:PlayerColorConverter x:Key="playerColorConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -31,19 +50,19 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="-5,0">
-            <Button x:Name="ResignButton" Content="Resign" Margin="5" Padding="10,5" Command="{Binding ResignCommand}" CommandParameter="{Binding ElementName=ResignButton}"/>
-            <Label x:Name="OpponentName"  Content="{Binding Path=OpponentName, Converter={StaticResource nullDecimalConv}}" ContentStringFormat="Ваш противник: {0}"  >
-                <!--<Label.Style>
-                    <Style TargetType="Label">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding}" Value="{x:Null}">
-                                <Setter Property="Content" Value="Ваш противник: "/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>-->
-            </Label>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="-5,0">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ResignButton" Content="Resign" Margin="5" Padding="10,5" Command="{Binding ResignCommand}" CommandParameter="{Binding ElementName=ResignButton}"/>
+                <Label x:Name="YourColor"  Content="{Binding Path=Color, Converter={StaticResource playerColorConverter}}" ContentStringFormat="Ваш цвет: {0}"  >
+                </Label>
+                <Label x:Name="OpponentName"  Content="{Binding Path=OpponentName, Converter={StaticResource nullDecimalConv}}" ContentStringFormat="Ваш противник: {0}"  >
+                </Label>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label x:Name="TimeRemaining"  Content="{Binding Path=Time}" ContentStringFormat="До конца хода {0}" >
+                </Label>
+            </StackPanel>
         </StackPanel>
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Numbers}" Width="21">
             <ItemsControl.ItemTemplate>
@@ -95,13 +114,14 @@
                                         <Setter Property="Background" Value="SandyBrown"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Active}" Value="True">
-                                        <Setter Property="Background" Value="Green"/>
+                                        <Setter Property="Background" Value="#204969"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding CanMove}" Value="True">
-                                        <Setter Property="BorderBrush" Value="Green"/>
+                                        <Setter Property="BorderBrush" Value="#204969"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding WhereMove}" Value="True">
-                                        <Setter Property="Background" Value="LightGreen"/>
+                                        <Setter Property="BorderBrush" Value="#204969"/>
+                                        <Setter Property="Background" Value="#dadada"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

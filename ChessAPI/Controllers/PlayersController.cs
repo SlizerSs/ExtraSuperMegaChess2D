@@ -76,6 +76,23 @@ namespace ChessAPI.Controllers
 
             return logic.PlayerDetails(player);
         }
+        
+        [HttpPost]
+        public string SideColor()
+        {
+            GetOpponentData info;
+            using (StreamReader stream = new StreamReader(HttpContext.Request.GetBufferlessInputStream()))
+            {
+                string body = stream.ReadToEnd();
+                info = JsonConvert.DeserializeObject<GetOpponentData>(body);
+                // body = "param=somevalue&param2=someothervalue"
+            }
+            Logic logic = new Logic();
+
+            string playerColor = logic.GetPlayerColor(info.ID, info.UserID);
+
+            return playerColor;
+        }
 
         // POST: Players/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 

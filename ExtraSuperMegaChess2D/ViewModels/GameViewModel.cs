@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ChessClient;
 using ChessLogic;
+//using GalaSoft.MvvmLight.Command;
+
 namespace ExtraSuperMegaChess2D
 {
     public class GameViewModel : NotifyPropertyChanged, EndGameInterface
@@ -18,38 +20,74 @@ namespace ExtraSuperMegaChess2D
         private Chess chess;
         private ICommand _resignCommand;
         private ICommand _cellCommand;
+        private ICommand _closingCommand;
         private string from;
         private string to;
         private string figure;
         private string move;
-        private string lastMove = "";
         public IEnumerable<char> Numbers => "87654321";
         public IEnumerable<char> Letters => "ABCDEFGH";
         private Client client;
         private Timer timer;
+
+        private Timer timeCount;
+        private TimeSpan _time;
+        public TimeSpan Time
+        {
+            get => _time;
+            set { _time = value; OnPropertyChanged(); }
+        }
+
         private PlayerInfo Player { get; set; }
         private GameInfo Game { get; set; }
+
         private string _opponentName;
+        private string _color;
         public string OpponentName
         {
             get => _opponentName;
             set { _opponentName = value; OnPropertyChanged(); }
         }
+        public string Color
+        {
+            get => _color;
+            set { _color = value; OnPropertyChanged(); }
+        }
 
         private Action EndGame;
+
+
         public GameViewModel(PlayerInfo player, GameInfo game)
         {
+            Time = TimeSpan.FromSeconds(600);
+
+            TimerCallback tc = async x =>
+            {
+                if (Time == TimeSpan.Zero)
+                {
+                    
+                    timeCount.Dispose();
+                    Client client4 = new Client(Player.PlayerID);
+                    await client4.EndGame(Game.GameID, chess.GetMoveColor() != Game.YourColor, false);
+                }
+                if (Game.Status == "play")
+                    Time = Time.Add(TimeSpan.FromSeconds(-1));
+            };
+            timeCount = new Timer(tc, null, 0, 1000);
+
+            Color = "";
             chess = new Chess(game.FEN);
             Player = player;
             Game = game;
-            client = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
-            Client client1 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
-            Client client2 = new Client("http://localhost:56213/Games/OpponentDetails", Player.PlayerID);
-
+            client = new Client(Player.PlayerID);
+            Client client1 = new Client(Player.PlayerID);
+            Client client2 = new Client(Player.PlayerID);
+            
             SetupBoard();
             if (chess.GetMoveColor() == Game.YourColor)
                 MarkValidFigures();
             string n = "";
+            GetSideColor();
             TimerCallback tm = async x =>
             {
                 Game = await client1.GetGameInfo(Game.GameID);
@@ -60,13 +98,14 @@ namespace ExtraSuperMegaChess2D
                     chess = new Chess(Game.FEN);
                     if (chess.GetMoveColor() == Game.YourColor)
                     {
+                        Time = TimeSpan.FromSeconds(600);
                         SetupBoard();
                         MarkValidFigures();
                     }
                 }
                 if(Game.Status == "done")
                 {
-                    Client playerClient = new Client("http://localhost:56213/Players/Details", Player.PlayerID);
+                    Client playerClient = new Client( Player.PlayerID);
                     Player = await playerClient.GetPlayerInfo();
                     Application.Current.Dispatcher.Invoke( () => {
                         timer.Dispose();
@@ -79,6 +118,7 @@ namespace ExtraSuperMegaChess2D
 
             };
             timer = new Timer(tm, null, 0, 1000);
+
 
         }
 
@@ -112,13 +152,41 @@ namespace ExtraSuperMegaChess2D
                 return _resignCommand ??
                 (_resignCommand = new RelayCommand(async parameter =>
                 {
+
                     ResignWindow resignWindow = new ResignWindow();
 
                     if (resignWindow.ShowDialog() == true)
                     {
-                        Client client2 = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
-                        await client2.EndGame(Game.GameID, false);
+                        Client client2 = new Client(Player.PlayerID);
+                        await client2.EndGame(Game.GameID, false, false);
                     }
+
+                }));
+            }
+        }
+        public ICommand ClosingCommand
+        {
+            get
+            {
+                return _closingCommand ??
+                (_closingCommand = new RelayCommand(async parameter =>
+                {
+                    if (Game.Status != "done")
+                    {
+                        ResignWindow resignWindow = new ResignWindow();
+
+                        if (resignWindow.ShowDialog() == true)
+                        {
+                            Client client2 = new Client(Player.PlayerID);
+                            await client2.EndGame(Game.GameID, false, false);
+                        }
+                    }
+                    string result = String.Empty;
+                    if (Game.Winner == Player.Name)
+                        result = "Поздравляем, вы выиграли :)";
+                    else
+                        result = "К сожалению, вы проиграли :(";
+                    MessageBox.Show(result);
 
                 }));
             }
@@ -138,7 +206,8 @@ namespace ExtraSuperMegaChess2D
                     {
                         from = GetSquare(cell);
                         cell.Active = true;
-                        MarkValidMoves(cell);
+                        if(chess.GetMoveColor() == Game.YourColor)
+                            MarkValidMoves(cell);
                     }
                     if (activeCell != null)
                     {
@@ -155,12 +224,14 @@ namespace ExtraSuperMegaChess2D
                             activeCell.State = CellState.Empty;
 
                             chess = chess.Move(move);
-
                             if (chess.IsMate())
                             {
-                                await client.EndGame(Game.GameID, true);
+                                await client.EndGame(Game.GameID, true, false);
                             }
-                            lastMove = move;
+                            if (chess.IsStalemate())
+                            {
+                                await client.EndGame(Game.GameID, false, true);
+                            }
                             UnMarkValidFigures();
                         }
                         UnMarkValidMoves();
@@ -257,14 +328,6 @@ namespace ExtraSuperMegaChess2D
         {
             board[y, x] = (CellState)Convert.ToChar(figure);
         }
-        async Task PeriodicRefresh()
-        {
-            while (true)
-            {
-                await Task.Delay(1000);
-
-            }
-        }
         async Task GetOpponentName(string n, Client client2)
         {
             n = (await client2.GetOpponent(Game.GameID)).Name;
@@ -272,6 +335,11 @@ namespace ExtraSuperMegaChess2D
                 OpponentName = "Ожидаем";
             else
                 OpponentName = n;
+        }
+        async Task GetSideColor()
+        {
+            Client client3 = new Client(Player.PlayerID);
+            Color = await client3.GetSideColor(Game.GameID);
         }
 
     }

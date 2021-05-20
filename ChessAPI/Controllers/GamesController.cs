@@ -120,7 +120,7 @@ namespace ChessAPI.Controllers
                 // body = "param=somevalue&param2=someothervalue"
             }
             Logic logic = new Logic();
-            Game game = logic.EndGame(endGameData.ID, endGameData.UserID, endGameData.IsWinner);
+            Game game = logic.EndGame(endGameData.ID, endGameData.UserID, endGameData.IsWinner, endGameData.IsStalemate);
             return logic.LiteGameDetails(game);
         }
         // POST: Games/Create

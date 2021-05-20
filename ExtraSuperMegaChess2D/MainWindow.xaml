@@ -3,63 +3,81 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ExtraSuperMegaChess2D"
         mc:Ignorable="d"
         Title="ExtraSuperMegaChess2D" Height="400" Width="400" ResizeMode="NoResize" Background="#dadada"
-        d:DataContext="{d:DesignInstance local:LoginViewModel, IsDesignTimeCreatable=True}">
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance local:LoginViewModel, IsDesignTimeCreatable=True}" FontFamily="Verdana">
     <Window.Resources>
-        
+        <Style TargetType="Button">
+            <Setter Property="Control.Background" Value="#204969" />
+            <Setter Property="Control.Foreground" Value="#fff7f7" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Control.Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-    
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy, IsAsync=true}" >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50px"/>
-            <RowDefinition Height="50px"/>
-            <RowDefinition Height="50px"/>
-            <RowDefinition Height="50px"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Column="1" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="1.5*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="loginTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
-                Логин
+
+            <TextBlock HorizontalAlignment="Center" Text="Логин" x:Name="loginTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
+                
             </TextBlock>
-            <TextBox Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px">
+                <TextBox VerticalContentAlignment="Center" Grid.Row="1" FontFamily="Calibri" FontSize="18">
                 <TextBox.Text>
-                    <Binding Path="Name">
+                    <Binding Path="User.Name">
                     </Binding>
                 </TextBox.Text>
             </TextBox>
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="2">
+        <Grid Grid.Column="1" Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="1.5*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="passwordTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
-                Пароль
-            </TextBlock>
-            <PasswordBox x:Name="txtPassword" PasswordChar="*" Grid.Row="1" FontFamily="Calibri" FontSize="18" Width="200px">
+                <TextBlock HorizontalAlignment="Center" Text="Пароль" x:Name="passwordTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
                 
+            </TextBlock>
+            <PasswordBox VerticalContentAlignment="Center" x:Name="txtPassword" PasswordChar="*" Grid.Row="1" FontFamily="Calibri" FontSize="18">
+
             </PasswordBox>
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="3">
+        <Grid Grid.Column="1" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Log in" x:Name="loginButton" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="0" MaxWidth="75px" MaxHeight="50px">
 
-            </Button>
-            <Button x:Name="registrButton" Command="{Binding RegistrCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="1" MaxWidth="75px" MaxHeight="50px">
-                Регистрация
-            </Button>
+                <Button Content="Авторизация" x:Name="loginButton" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="0" MaxWidth="100" MaxHeight="50px">
+                </Button>
+
+                <Button Content="Регистрация" x:Name="registrButton" Command="{Binding RegistrCommand}" CommandParameter="{Binding ElementName=txtPassword}" Grid.Column="1" MaxWidth="100" MaxHeight="50px">
+                
+                 </Button>
             
         </Grid>
     </Grid>
+    </xctk:BusyIndicator>
 </Window>

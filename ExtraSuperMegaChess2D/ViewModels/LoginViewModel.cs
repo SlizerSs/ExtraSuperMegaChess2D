@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,22 @@ using ChessAPI.Models;
 using ChessClient;
 namespace ExtraSuperMegaChess2D
 {
-    class LoginViewModel
+    class LoginViewModel : NotifyPropertyChanged
     {
         // команда добавления нового объекта
         private RelayCommand loginCommand;
         private RelayCommand registrCommand;
-        public string Name { get; set; }
-        public string Password { get; set; }
+        public UserModel User { get; set; }
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set { _isBusy = value; OnPropertyChanged(); }
+        }
+        public LoginViewModel()
+        {
+            User = new UserModel();
+        }
         public RelayCommand LoginCommand
         {
             get
@@ -25,23 +35,31 @@ namespace ExtraSuperMegaChess2D
                 return loginCommand ??
                   (loginCommand = new RelayCommand(async obj =>
                   {
-
                       var passwordBox = obj as PasswordBox;
-                      
-                      Password = passwordBox.Password;
-                      if (Name != null && Password != null)
+                      User.Password = passwordBox.Password;
+
+                      var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                      var context = new ValidationContext(User);
+                      if (!Validator.TryValidateObject(User, context, results, true))
                       {
-                          Client client = new Client("http://localhost:56213/Players");
-
+                          foreach (var error in results)
+                          {
+                              MessageBox.Show(error.ErrorMessage);
+                          }
+                      }
+                      else
+                      {
+                          Client client = new Client();
+                          IsBusy = true;
                           List<PlayerInfo> players = await client.GetAllPlayers();
-
+                          IsBusy = false;
                           PlayerInfo player = new PlayerInfo();
                           foreach (PlayerInfo p in players)
                           {
-                              if (p.Name == Name)
+                              if (p.Name == User.Name)
                                   player = p;
                           }
-                          if (HashGenerator.VerifyHashedPassword(player.Password, Password))
+                          if (HashGenerator.VerifyHashedPassword(player.Password, User.Password))
                           {
                               StartWindow startWindow = new StartWindow(player);
                               startWindow.Show();
@@ -49,14 +67,10 @@ namespace ExtraSuperMegaChess2D
                           }
                           else
                           {
-                              MessageBox.Show("Введён неверный пароль");
+                              MessageBox.Show("Неверное имя пользователя или пароль");
                           }
+                      }
 
-                      }
-                      else
-                      {
-                          MessageBox.Show("Введите имя и пароль");
-                      }
                       
                   }));
             }
@@ -69,27 +83,36 @@ namespace ExtraSuperMegaChess2D
                   (registrCommand = new RelayCommand(async obj =>
                   {
                       var passwordBox = obj as PasswordBox;
-                      Password = passwordBox.Password;
-                      if (Name != null && Password != null)
-                      {
-                          Client client = new Client("http://localhost:56213/Players");
+                      User.Password = passwordBox.Password;
 
+                      var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                      var context = new ValidationContext(User);
+                      if (!Validator.TryValidateObject(User, context, results, true))
+                      {
+                          foreach (var error in results)
+                          {
+                              MessageBox.Show(error.ErrorMessage);
+                          }
+                      }
+                      else
+                      {
+                          Client client = new Client();
+                          IsBusy = true;
                           List<PlayerInfo> players = await client.GetAllPlayers();
+                          IsBusy = false;
                           foreach (PlayerInfo pl in players)
                           {
-                              if (pl.Name == Name)
+                              if (pl.Name == User.Name)
                               {
                                   MessageBox.Show("Пользователь с таким именем уже существует");
                                   return;
                               }
                           }
-                          client = new Client("http://localhost:56213/Players/Create/");
-                          await client.MakeNewPlayer(Name, HashGenerator.HashPassword(Password));
+                          client = new Client();
+                          IsBusy = true;
+                          await client.MakeNewPlayer(User.Name, HashGenerator.HashPassword(User.Password));
+                          IsBusy = false;
                           MessageBox.Show("Регистрация прошла успешно");
-                      }
-                      else
-                      {
-                          MessageBox.Show("Введите имя и пароль");
                       }
 
                   }));

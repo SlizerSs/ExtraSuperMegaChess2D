@@ -15,6 +15,12 @@ namespace ExtraSuperMegaChess2D
 {
     public class StartViewModel : NotifyPropertyChanged
     {
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set { _isBusy = value; OnPropertyChanged(); }
+        }
 
         private RelayCommand startNewGameCommand;
         private RelayCommand connectToGameCommand;
@@ -27,14 +33,15 @@ namespace ExtraSuperMegaChess2D
         }
         public PlayerInfo Player { get; set; }
         Timer timer;
+
         public StartViewModel(PlayerInfo player)
         {
             Player = player;
-            Client client = new Client("http://localhost:56213/Games");
+            Client client = new Client();
             Games = new List<GameInfo>();
             
 
-            Client client1 = new Client("http://localhost:56213/Games");
+            Client client1 = new Client();
 
             TimerCallback tm = async x =>
             {
@@ -50,9 +57,10 @@ namespace ExtraSuperMegaChess2D
                   (startNewGameCommand = new RelayCommand(async obj =>
                   {
                       var bt = obj as Button;
-                      Client client = new Client("http://localhost:56213/Games/Create", Player.PlayerID);
-
+                      Client client = new Client(Player.PlayerID);
+                      IsBusy = true;
                       GameInfo newGame = await client.GetCurrentGame();
+                      IsBusy = false;
                       GameWindow gw = new GameWindow(Player, newGame);
                       gw.Show();
                       CloseWindow(Window.GetWindow(bt));
@@ -70,22 +78,26 @@ namespace ExtraSuperMegaChess2D
                       var param = parameter as Tuple<int, ListBox>;
                       int openGameID = param.Item1;
                       
-                      Client client = new Client("http://localhost:56213/Games/Details", Player.PlayerID);
-                      Client clientSide = new Client("http://localhost:56213/Sides/Create", Player.PlayerID);
-
+                      Client client = new Client(Player.PlayerID);
+                      Client clientSide = new Client(Player.PlayerID);
+                      IsBusy = true;
                       GameInfo openGame = await client.GetGameInfo(openGameID);
-                      if (openGame.Black=="")
+                      if (openGame.Black=="" || openGame.Black == Player.Name || openGame.White == Player.Name)
                       {
-                          await clientSide.MakeNewSide(openGame.GameID, "b");
-                          Client clientStatus = new Client("http://localhost:56213/Games/ChangeStatus", Player.PlayerID);
-                          await clientStatus.ChangeStatus(openGame.GameID, "play");
-
+                          if(openGame.Black != Player.Name && openGame.White != Player.Name)
+                          {
+                              await clientSide.MakeNewSide(openGame.GameID, "b");
+                              Client clientStatus = new Client(Player.PlayerID);
+                              await clientStatus.ChangeStatus(openGame.GameID, "play");
+                              IsBusy = false;
+                          }
+                            
                           GameWindow gw = new GameWindow(Player, openGame);
                           gw.Show();
                           
                           CloseWindow(Window.GetWindow(param.Item2));
                       }
-
+                      IsBusy = false;
 
                   }));
             }

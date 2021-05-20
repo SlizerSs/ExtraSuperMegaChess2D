@@ -17,24 +17,20 @@ namespace ChessClient
     public class Client
     {
         private readonly HttpClient _httpClient;
-        private readonly string _serverUrl; // "http://localhost:5001/api/Cards"
+        private readonly string _serverUrl; 
         private readonly Uri _apiUri;
-        public string host { get; private set; }
         public int userID { get; private set; }
 
-        public Client(string host, int userid)
+        public Client(int userid)
         {
-            this.host = host;
-            this.userID = userid;
+            userID = userid;
 
             _serverUrl = "http://localhost:56213/";
             _httpClient = new HttpClient();
             _apiUri = new Uri(_serverUrl);
         }
-        public Client(string host)
+        public Client()
         {
-            this.host = host;
-
             _serverUrl = "http://localhost:56213/";
             _httpClient = new HttpClient();
             _apiUri = new Uri(_serverUrl);
@@ -93,9 +89,13 @@ namespace ChessClient
         {
             return new PlayerInfo(ParseJSON(await CallServerForOpponent(ID)));
         }
-        public async Task EndGame(int gameID, bool IsWinner)
+        public async Task<string> GetSideColor(int ID)
         {
-            await CallServerForEndGame(gameID, IsWinner);
+            return await CallServerForSideColor(ID, userID);
+        }
+        public async Task EndGame(int gameID, bool IsWinner, bool isStalemate)
+        {
+            await CallServerForEndGame(gameID, IsWinner, isStalemate);
             return;
         }
         private async Task<string> CallServer(int GameID)
@@ -167,10 +167,17 @@ namespace ChessClient
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/ChangeStatus/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
-        private async Task<string> CallServerForEndGame(int gameID, bool IsWinner)
+        private async Task<string> CallServerForSideColor(int ID, int userID)
         {
 
-            var bodyData = JsonConvert.SerializeObject(new EndGameData { UserID = userID, ID = gameID, IsWinner = IsWinner });
+            var bodyData = JsonConvert.SerializeObject(new GetOpponentData { ID= ID, UserID = userID });
+            var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Players/SideColor/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        private async Task<string> CallServerForEndGame(int gameID, bool IsWinner, bool IsStalemate)
+        {
+
+            var bodyData = JsonConvert.SerializeObject(new EndGameData { UserID = userID, ID = gameID, IsWinner = IsWinner, IsStalemate = IsStalemate });
             var requestResponse = await _httpClient.PostAsync($"{ _serverUrl}Games/EndGame/", new StringContent(bodyData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
             return await requestResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
