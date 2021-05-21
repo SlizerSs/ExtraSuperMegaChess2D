@@ -20,6 +20,7 @@ namespace ExtraSuperMegaChess2D
         private ICommand _resignCommand;
         private ICommand _cellCommand;
         private ICommand _closingCommand;
+        private ICommand _pawnTurningCommand;
         private string from;
         private string to;
         private string figure;
@@ -55,11 +56,28 @@ namespace ExtraSuperMegaChess2D
 
         private Action EndGame;
 
+        private string _isPawnTurning;
+        public string IsPawnTurning {
+            get => _isPawnTurning;
+            set { _isPawnTurning = value; OnPropertyChanged(); }
+        }
+        
+        private bool _boardVisibility;
+        public bool BoardVisibility
+        {
+            get => _boardVisibility;
+            set { _boardVisibility = value; OnPropertyChanged(); }
+        }
+
+        public string PawnToFigure { get; set; } = String.Empty;
+
+        private bool _pawnTaskFlag;
 
         public GameViewModel(PlayerInfo player, GameInfo game)
         {
             Time = TimeSpan.FromSeconds(600);
-
+            IsPawnTurning = "Hidden";
+            BoardVisibility = true;
             TimerCallback tc = async x =>
             {
                 if (Time == TimeSpan.Zero)
@@ -185,6 +203,19 @@ namespace ExtraSuperMegaChess2D
                 }));
             }
         }
+        public ICommand PawnTurningCommand
+        {
+            get
+            {
+                return _pawnTurningCommand ??
+                (_pawnTurningCommand = new RelayCommand(parameter =>
+                {
+
+                    PawnToFigure = (string)parameter;
+
+                }));
+            }
+        }
 
         public ICommand CellCommand
         {
@@ -194,49 +225,94 @@ namespace ExtraSuperMegaChess2D
                 (_cellCommand = new RelayCommand(async parameter =>
                 {
 
-                    Cell cell = (Cell)parameter;
-                    Cell activeCell = Board.FirstOrDefault(x => x.Active);
-                    if (cell.State != CellState.Empty && activeCell == null)
-                    {
-                        from = GetSquare(cell);
-                        cell.Active = true;
-                        if(chess.GetMoveColor() == Game.YourColor)
-                            MarkValidMoves(cell);
-                    }
-                    if (activeCell != null)
-                    {
-                        
-                        to = GetSquare(cell);
-                        figure = ((char)activeCell.State).ToString();
+                Cell cell = (Cell)parameter;
+                Cell activeCell = Board.FirstOrDefault(x => x.Active);
+                if (cell.State != CellState.Empty && activeCell == null)
+                {
+                    from = GetSquare(cell);
+                    cell.Active = true;
+                    if (chess.GetMoveColor() == Game.YourColor)
+                        MarkValidMoves(cell);
+                }
+                if (activeCell != null)
+                {
 
-                        move = figure + from + to;
-                        if (chess.Move(move)!=chess && chess.GetMoveColor() == Game.YourColor && Game.Status=="play")
+                    to = GetSquare(cell);
+                    figure = ((char)activeCell.State).ToString();
+
+                    move = figure + from + to;
+                    if (chess.Move(move) != chess && chess.GetMoveColor() == Game.YourColor && Game.Status == "play")
+                    {
+                        if ((figure == "P" || figure == "p") && (to[1] == '1' || to[1] == '8'))
+                        {
+                            IsPawnTurning = "Visible";
+                            BoardVisibility = false;
+                            var outer = await Task.Factory.StartNew( async () =>
+                            {
+                                _pawnTaskFlag = true;
+                                while (IsPawnTurning == "Visible")
+                                {
+                                if (PawnToFigure != String.Empty)
+                                {
+                                    if (figure == "P")
+                                        move += PawnToFigure;
+                                    else if (figure == "p")
+                                        move += PawnToFigure.ToLower();
+
+                                    Game = await client.SendMove(Game.GameID, move);
+
+                                    cell.State = ConvertStringToCellState(figure == "P" ? PawnToFigure : PawnToFigure.ToLower());
+                                    activeCell.State = CellState.Empty;
+                                    chess = chess.Move(move);
+
+                                    IsPawnTurning = "Hidden";
+                                    PawnToFigure = String.Empty;
+                                    BoardVisibility = true;
+
+
+
+                                        activeCell.Active = false;
+                                        activeCell = null;
+                                        UnMarkValidMoves();
+                                    }
+                                }
+                                _pawnTaskFlag = false;
+                            });
+                        }
+                        else
                         {
                             Game = await client.SendMove(Game.GameID, move);
                             cell.State = activeCell.State;
-
                             activeCell.State = CellState.Empty;
-
                             chess = chess.Move(move);
-                            if (chess.IsMate())
-                            {
-                                await client.EndGame(Game.GameID, true, false);
-                            }
-                            if (chess.IsStalemate())
-                            {
-                                await client.EndGame(Game.GameID, false, true);
-                            }
-                            UnMarkValidFigures();
-                        }
-                        UnMarkValidMoves();
 
-                        //MarkValidFigures();
-                        from = null;
-                        to = null;
-                        move = null;
-                        activeCell.Active = false;
-                        activeCell = null;
+                        }
+                           
+
                         
+                        if (chess.IsMate())
+                        {
+                            await client.EndGame(Game.GameID, true, false);
+                        }
+                        if (chess.IsStalemate())
+                        {
+                            await client.EndGame(Game.GameID, false, true);
+                        }
+                        UnMarkValidFigures();
+                    }
+
+
+                        if (!_pawnTaskFlag)
+                        {
+                            //MarkValidFigures();
+                            from = null;
+                            to = null;
+                            move = null;
+                            activeCell.Active = false;
+                            activeCell = null;
+                            UnMarkValidMoves();
+                        }
+
                     }
                 }, parameter => parameter is Cell cell && (Board.Any(x => x.Active) || cell.State != CellState.Empty)));
             }
@@ -335,6 +411,28 @@ namespace ExtraSuperMegaChess2D
             Client client3 = new Client(Player.PlayerID);
             Color = await client3.GetSideColor(Game.GameID);
         }
-
+        public CellState ConvertStringToCellState(string figure1)
+        {
+            switch (figure1)
+            {
+                case "B":
+                    return CellState.WhiteBishop;
+                case "N":
+                    return CellState.WhiteKnight;
+                case "R":
+                    return CellState.WhiteRook;
+                case "Q":
+                    return CellState.WhiteQueen;
+                case "b":
+                    return CellState.BlackBishop;
+                case "n":
+                    return CellState.BlackKnight;
+                case "r":
+                    return CellState.BlackRook;
+                case "q":
+                    return CellState.BlackQueen;
+            }
+            return CellState.Empty;
+        }
     }
 }

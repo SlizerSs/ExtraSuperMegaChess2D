@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using ClientServerApi;
+using System.Windows;
 
 namespace ChessClient
 {
@@ -38,65 +39,183 @@ namespace ChessClient
 
         public async Task<GameInfo> GetCurrentGame()
         {
-            return new GameInfo(ParseJSON(await CallServer()));
+            try
+            {
+                return new GameInfo(ParseJSON(await CallServer()));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new GameInfo();
+            }
+            
         }
 
         public async Task<GameInfo> GetGameInfo(int GameID)
         {
-            return new GameInfo(ParseJSON(await CallServer(GameID)));
+            try
+            {
+                return new GameInfo(ParseJSON(await CallServer(GameID)));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new GameInfo();
+            }
         }
 
         public async Task<List<GameInfo>> GetAllGames()
         {
             List<GameInfo> result = new List<GameInfo>();
+            try
+            {
+                foreach (NameValueCollection col in MultipleParseJSONForGames(await CallServerForGames()))
+                    result.Add(new GameInfo(col));
+                return result;
 
-            foreach (NameValueCollection col in MultipleParseJSONForGames(await CallServerForGames()))
-                result.Add(new GameInfo(col));
-            return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return null;
+            }
         }
 
         public async Task<GameInfo> SendMove(int id, string move)
         {
-            return new GameInfo(ParseJSON(await CallServer(id, move)));
+            try
+            {
+                return new GameInfo(ParseJSON(await CallServer(id, move)));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new GameInfo();
+            }
         }
         public async Task<GameInfo> ChangeStatus(int gameID, string newStatus)
         {
-            return new GameInfo(ParseJSON(await CallServerChangeStatus(gameID, newStatus)));
+            try
+            {
+                return new GameInfo(ParseJSON(await CallServerChangeStatus(gameID, newStatus)));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new GameInfo();
+            }
         }
 
         public async Task<PlayerInfo> MakeNewPlayer(string name, string password)
         {
-            return new PlayerInfo(ParseJSON(await CallServerForPlayer(name, password)));
+            try
+            {
+                return new PlayerInfo(ParseJSON(await CallServerForPlayer(name, password)));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new PlayerInfo();
+            }
         }
         public async Task<List<PlayerInfo>> GetAllPlayers()
         {
             List<PlayerInfo> result = new List<PlayerInfo>();
 
-            foreach (NameValueCollection col in MultipleParseJSONForPlayers(await CallServerForPlayer()))
-                result.Add(new PlayerInfo(col));
-            return result;
+            try
+            {
+
+                foreach (NameValueCollection col in MultipleParseJSONForPlayers(await CallServerForPlayer()))
+                    result.Add(new PlayerInfo(col));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return null;
+            }
         }
         public async Task<PlayerInfo> GetPlayerInfo()
         {
-            return new PlayerInfo(ParseJSON(await CallServerForPlayerInfo()));
+            try
+            {
+
+                return new PlayerInfo(ParseJSON(await CallServerForPlayerInfo()));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new PlayerInfo();
+            }
         }
         public async Task MakeNewSide(int ID, string Color)
         {
-            await CallServerForSide(ID, Color);
-            return;
+            try
+            {
+                await CallServerForSide(ID, Color);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return;
+            }
         }
         public async Task<PlayerInfo> GetOpponent(int ID)
         {
-            return new PlayerInfo(ParseJSON(await CallServerForOpponent(ID)));
+            try
+            {
+                return new PlayerInfo(ParseJSON(await CallServerForOpponent(ID)));
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return new PlayerInfo();
+            }
         }
         public async Task<string> GetSideColor(int ID)
         {
-            return await CallServerForSideColor(ID, userID);
+            try
+            {
+                return await CallServerForSideColor(ID, userID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return String.Empty;
+            }
         }
         public async Task EndGame(int gameID, bool IsWinner, bool isStalemate)
         {
-            await CallServerForEndGame(gameID, IsWinner, isStalemate);
-            return;
+            try
+            {
+                await CallServerForEndGame(gameID, IsWinner, isStalemate);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Send error\r\nMessage: " + ex.Message);
+                Environment.Exit(1);
+                return;
+            }
+            
         }
         private async Task<string> CallServer(int GameID)
         {

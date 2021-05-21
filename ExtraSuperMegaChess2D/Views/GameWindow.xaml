@@ -60,8 +60,15 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <Label x:Name="TimeRemaining"  Content="{Binding Path=Time}" ContentStringFormat="До конца хода {0}" >
+                <Label x:Name="TimeRemaining" Content="{Binding Path=Time}" ContentStringFormat="До конца хода {0}" >
                 </Label>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsPawnTurning}">
+                <Button Content="Ферзь" Command="{Binding PawnTurningCommand}" CommandParameter="Q" Margin="0 0 10 0"/>
+                <Button Content="Ладья" Command="{Binding PawnTurningCommand}" CommandParameter="R" Margin="0 0 10 0"/>
+                <Button Content="Конь" Command="{Binding PawnTurningCommand}" CommandParameter="N" Margin="0 0 10 0"/>
+                <Button Content="Слон" Command="{Binding PawnTurningCommand}" CommandParameter="B" Margin="0 0 10 0"/>
             </StackPanel>
         </StackPanel>
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Numbers}" Width="21">
@@ -87,7 +94,7 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Board}" AlternationCount="64">
+        <ItemsControl IsHitTestVisible="{Binding BoardVisibility}"  Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Board}" AlternationCount="64">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Width="60" Height="60" Command="{Binding DataContext.CellCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" >

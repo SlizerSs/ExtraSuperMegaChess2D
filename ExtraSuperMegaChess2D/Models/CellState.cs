@@ -22,5 +22,6 @@ namespace ExtraSuperMegaChess2D
         BlackKnight = 'n',
         BlackBishop = 'b',
         BlackPawn = 'p'
+
     }
 }

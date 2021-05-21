@@ -53,6 +53,9 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -110,6 +113,7 @@
     <Compile Include="Controls\ChessPiece.xaml.cs">
       <DependentUpon>ChessPiece.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HTTPService\Client.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\CellState.cs" />
@@ -204,6 +208,10 @@
     <ProjectReference Include="..\ClassClient\ChessClient.csproj">
       <Project>{ae90a0cd-bf3b-4c04-96b6-7153cb88f800}</Project>
       <Name>ChessClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClientServerApi\ClientServerApi.csproj">
+      <Project>{e622a041-30c5-4f42-8184-371386fb6848}</Project>
+      <Name>ClientServerApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
