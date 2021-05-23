@@ -205,10 +205,6 @@
       <Project>{e33fcfb8-43fb-44b9-8087-21ffa06f3b0e}</Project>
       <Name>ChessLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ClassClient\ChessClient.csproj">
-      <Project>{ae90a0cd-bf3b-4c04-96b6-7153cb88f800}</Project>
-      <Name>ChessClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ClientServerApi\ClientServerApi.csproj">
       <Project>{e622a041-30c5-4f42-8184-371386fb6848}</Project>
       <Name>ClientServerApi</Name>
