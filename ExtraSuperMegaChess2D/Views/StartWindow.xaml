@@ -138,11 +138,6 @@
                                         <TextBlock VerticalAlignment="Center" Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Белый игрок: {0}, Path=White, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock VerticalAlignment="Center" Grid.Column="2" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Чёрный игрок: {0}, Path=Black, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock VerticalAlignment="Center" Grid.Column="3" TextTrimming="CharacterEllipsis" Margin="0 0 5 0" Text="{Binding StringFormat=Статус: {0}, Path=Status, UpdateSourceTrigger=PropertyChanged}" />
-
-                                        <!--<Label Grid.Column="0" Content="{Binding Path=GameID, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Game ID: {0}"/>
-                                    <Label Grid.Column="1" Content="{Binding Path=White, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="w: {0}"/>
-                                    <Label Grid.Column="2" Content="{Binding Path=Black, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="b: {0}"/>
-                                    <Label Grid.Column="3" Content="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Status: {0}"/>-->
                                         <Button  VerticalAlignment="Center" HorizontalAlignment="Right" Height="35" Margin="5 0 5 0" Padding="5 0 5 0" Grid.Column="4" Command="{Binding Path=DataContext.ConnectToGameCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Content="Играть" >
                                             <Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource ConnectToGameConverter}">
