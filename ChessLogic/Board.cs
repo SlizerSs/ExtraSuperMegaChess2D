@@ -28,8 +28,6 @@ namespace ChessLogic
             InitFigures(parts[0]);
             moveColor = (parts[1] == "b") ? Color.black : Color.white;
             moveNumber = int.Parse(parts[5]);
-
-            //moveColor = Color.white;
         }
         void InitFigures(string data)
         {

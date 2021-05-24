@@ -45,7 +45,7 @@
             <TextBlock HorizontalAlignment="Center" Text="Логин" x:Name="loginTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
                 
             </TextBlock>
-                <TextBox VerticalContentAlignment="Center" Grid.Row="1" FontFamily="Calibri" FontSize="18">
+                <TextBox VerticalContentAlignment="Center" MaxLength="30" Grid.Row="1" FontFamily="Calibri" FontSize="18">
                 <TextBox.Text>
                     <Binding Path="User.Name">
                     </Binding>
@@ -60,7 +60,7 @@
                 <TextBlock HorizontalAlignment="Center" Text="Пароль" x:Name="passwordTextBlock" Grid.Row="0" FontFamily="Calibri" FontSize="14" Width="Auto">
                 
             </TextBlock>
-            <PasswordBox VerticalContentAlignment="Center" x:Name="txtPassword" PasswordChar="*" Grid.Row="1" FontFamily="Calibri" FontSize="18">
+                <PasswordBox MaxLength="30" VerticalContentAlignment="Center" x:Name="txtPassword" PasswordChar="*" Grid.Row="1" FontFamily="Calibri" FontSize="18">
 
             </PasswordBox>
         </Grid>

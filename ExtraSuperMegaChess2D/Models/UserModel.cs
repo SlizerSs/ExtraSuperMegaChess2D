@@ -17,9 +17,5 @@ namespace ExtraSuperMegaChess2D
         [RegularExpression(@"\w*", ErrorMessage = "Пароль должен содержать буквы и цифры")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина пароля должна быть от 3 до 50")]
         public string Password { get; set; }
-        //[Required(ErrorMessage = "Подтвердите пароль")]
-        //[StringLength(50, MinimumLength = 3, ErrorMessage = "Длина пароля должна быть от 3 до 50")]
-        //[Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        //public string ConfirmPassword { get; set; }
     }
 }

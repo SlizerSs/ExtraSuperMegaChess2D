@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ExtraSuperMegaChess2D.CellColorConverter">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Converters\CellColorConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.StringToNullableDecimalConverter" BaseTypeListCollapsed="true">
+    <Position X="5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Converters\StringToNullableDecimalConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.ConnectToGameConverter" BaseTypeListCollapsed="true">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Converters\ConnectToGameConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.PlayerColorConverter" BaseTypeListCollapsed="true">
+    <Position X="3.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Converters\PlayerColorConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.EndGameBehavior">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEANAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Helpers\EndGameBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.HashGenerator">
+    <Position X="3.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Helpers\HashGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.NotifyPropertyChanged" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\NotifyPropertyChanged.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.RelayCommand" BaseTypeListCollapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChessClient.Client">
+    <Position X="6.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAEACPAAAAgQACJACCAIAAwQAQEAAAIAAEAQQEgE=</HashCode>
+      <FileName>HTTPService\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.Board" BaseTypeListCollapsed="true">
+    <Position X="2" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAACAAAAAAAAAAAAAAEAAAAAAAAAAE=</HashCode>
+      <FileName>Models\Board.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.Cell">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <InheritanceLine Type="ExtraSuperMegaChess2D.NotifyPropertyChanged" FixedToPoint="true">
+      <Path>
+        <Point X="14.5" Y="2.055" />
+        <Point X="14.5" Y="2.26" />
+        <Point X="15.5" Y="2.26" />
+        <Point X="15.5" Y="2.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAACCAAAEAAAAAAAAEACAAAAAAAAAAgAABwBAAAAAA=</HashCode>
+      <FileName>Models\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.UserModel">
+    <Position X="2" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.GameViewModel">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAIWJYhoAEChEgEAgIggQAgACAA8EJQEhSoZAQA=</HashCode>
+      <FileName>ViewModels\GameViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.LoginViewModel">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABAAAAAAAAEAAAABAAAARAAAAAAAAAAIAAAACAAAA=</HashCode>
+      <FileName>ViewModels\LoginViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.ResignViewModel">
+    <Position X="3.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ResignViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtraSuperMegaChess2D.StartViewModel">
+    <Position X="16.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAQAgAAAAAAAAAAAAAAAgARgBAAAIAAAAAAAAQAAAAQ=</HashCode>
+      <FileName>ViewModels\StartViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ExtraSuperMegaChess2D.EndGameInterface">
+    <Position X="3.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Helpers\EndGameInterface.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ExtraSuperMegaChess2D.CellState">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBAAAAACAAAEAAgAAAIAQAAQgAAAQgAAAAAAAAAAAGA=</HashCode>
+      <FileName>Models\CellState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

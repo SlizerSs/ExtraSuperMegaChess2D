@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClientServerApi.ChangeGameStatusData">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChangeGameStatusData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientServerApi.EndGameData">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAgAAAAAAAAAAEAAEAAAAAA=</HashCode>
+      <FileName>EndGameData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientServerApi.GameSendMoveData">
+    <Position X="2" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAgAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameSendMoveData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientServerApi.GetOpponentData">
+    <Position X="3.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GetOpponentData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientServerApi.MakeNewSideData">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>MakeNewSideData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientServerApi.UserLoginData">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>UserLoginData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="ChessClient.GameInfo">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAEAAAEAAAIAAAAAAGAAAAABAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameInfo.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ChessClient.PlayerInfo">
+    <Position X="2" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAiAACAAAAAAAA=</HashCode>
+      <FileName>PlayerInfo.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
