@@ -24,7 +24,7 @@ namespace ExtraSuperMegaChess2D
         {
             InitializeComponent();
             DataContext = new GameViewModel(player, game);
-
+            //хуй
         }
 
     }
