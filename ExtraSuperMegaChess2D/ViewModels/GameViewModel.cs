@@ -68,6 +68,13 @@ namespace ExtraSuperMegaChess2D
             get => _boardVisibility;
             set { _boardVisibility = value; OnPropertyChanged(); }
         }
+        
+        private bool _isYourTurn;
+        public bool IsYourTurn
+        {
+            get => _isYourTurn;
+            set { _isYourTurn = value; OnPropertyChanged(); }
+        }
 
         public string PawnToFigure { get; set; } = String.Empty;
 
@@ -96,6 +103,9 @@ namespace ExtraSuperMegaChess2D
             chess = new Chess(game.FEN);
             Player = player;
             Game = game;
+
+            IsYourTurn = chess.GetMoveColor() == Game.YourColor;
+
             client = new Client(Player.PlayerID);
             Client client1 = new Client(Player.PlayerID);
             Client client2 = new Client(Player.PlayerID);
@@ -109,10 +119,11 @@ namespace ExtraSuperMegaChess2D
             {
                 Game = await client1.GetGameInfo(Game.GameID);
                 await GetOpponentName(n, client2);
-
+                IsYourTurn = chess.GetMoveColor() == Game.YourColor;
                 if (chess.fen != Game.FEN)
                 {
                     chess = new Chess(Game.FEN);
+                    
                     if (chess.GetMoveColor() == Game.YourColor)
                     {
                         Time = TimeSpan.FromSeconds(600);
@@ -300,7 +311,6 @@ namespace ExtraSuperMegaChess2D
                         }
                         UnMarkValidFigures();
                     }
-
 
                         if (!_pawnTaskFlag)
                         {
